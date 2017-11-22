@@ -1,6 +1,7 @@
 require 'sinatra'
 require 'singleton'
 
+set :bind, '0.0.0.0'
 set :views, Proc.new { File.join(root, "../views") }
 
 CEC_COMMANDS = {
