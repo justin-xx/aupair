@@ -22,7 +22,8 @@ class Television
 
   include Singleton
 
-  def initialize
+  def initialize(_address = 0)
+    @address = 0
   end
 
   def turn_display_on
@@ -33,7 +34,7 @@ class Television
     cec_command('off')
   end
 
-  def display_source(src='HDMI 3')
+  def set_source(src='HDMI 3')
     cec_command('set source', SOURCE[src])
   end
 
@@ -54,41 +55,41 @@ end
 
 get '/tv/off' do
   @tv = Television.instance
-  @tv.turn_display_off
+  @result = @tv.turn_display_off
   erb :television
 end
 
 
 get '/tv/on' do
   @tv = Television.instance
-  @tv.turn_display_on
+  @result = @tv.turn_display_on
   erb :television
 end
 
 
 get '/tv/hdmi1' do
   @tv = Television.instance
-  @tv.display_source('HDMI 1')
+  @result = @tv.set_source('HDMI 1')
   erb :television
 end
 
 
 get '/tv/hdmi2' do
   @tv = Television.instance
-  @tv.display_source('HDMI 2')
+  @result = @tv.set_source('HDMI 2')
   erb :television
 end
 
 
 get '/tv/hdmi3' do
   @tv = Television.instance
-  @tv.display_source('HDMI 3')
+  @result = @tv.set_source('HDMI 3')
   erb :television
 end
 
 
 get '/tv/hdmi4' do
   @tv = Television.instance
-  @tv.display_source('HDMI 4')
+  @result = @tv.set_source('HDMI 4')
   erb :television
 end
