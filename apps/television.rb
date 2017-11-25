@@ -67,7 +67,7 @@ class Television
   end
   
   def execute_command(cmd = 'on', parameter = '')
-    `echo "tx #{CEC_COMMANDS[cmd].gsub("XX", parameter)}" | cec-client -s -d 0`
+    `echo "tx #{CEC_COMMANDS[cmd].gsub("XX", parameter)}" | cec-client -s -d 1`
   end
 
 end
