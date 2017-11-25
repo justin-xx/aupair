@@ -9,24 +9,48 @@
    <meta name="author" content="">
 
    <title>Resume - Start Bootstrap Theme</title>
-    
+   <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
    </head>
    
    <body>
       <ul>
-         <a href="/tv/on">On</a>
-         <a href="/tv/off">Off</a>
-         <a href="/tv/hdmi1">HDMI 1</a>
-         <a href="/tv/hdmi2">HDMI 2</a>
-         <a href="/tv/hdmi3">HDMI 3</a>
-         <a href="/tv/hdmi4">HDMI 4</a>
+         <a id="tv_on" href="#">On</a>
+         <a id="tv_off" href="#">Off</a>
+         <a class="tv_set_source" name="HDMI 1" href="#">HDMI 1</a>
+         <a class="tv_set_source" name="HDMI 2" href="#">HDMI 2</a>
+         <a class="tv_set_source" name="HDMI 3" href="#">HDMI 3</a>
+         <a class="tv_set_source" name="HDMI 4" href="#">HDMI 4</a>
       </ul>
       
-
-         <% if @result %>
-         <p><%= @result %></p>
+      <p id="result">
+         <% if @tv %>
+            <%= @tv.to_json %>
          <% end %>
-
+      </p>
+      
+      <script type="text/javascript">
+         $("#tv_on").click(function(){
+            post_tv_function("turn_display_on");               
+            return null;            
+         });
+         
+         $("#tv_off").click(function(){
+            post_tv_function("turn_display_off");               
+            return null;
+         });
+         
+         $(".tv_set_source").click(function(){            
+            post_tv_function("set_source", $(this).attr('name'));      
+            return null;
+         });
+         
+         function post_tv_function(_action = '', _source = '') {
+            $.post( "/tv", { action: _action, source: _source }, function (data) {
+               console.log(data);
+               $("#result").html("<p id=\"result\">" + JSON.stringify(data) + "</p>");
+            });
+         }
+      </script>
       
    </body>
    
