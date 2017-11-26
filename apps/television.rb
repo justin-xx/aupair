@@ -1,7 +1,15 @@
 class TelevisionController < Aupair::Base
   
-  post '/' do
+  before do
     content_type :json
+  end
+  
+  get '/' do
+    @tv = Television.instance
+    @tv.to_json
+  end
+  
+  post '/' do
     @tv = Television.instance
   
     case params['action']
