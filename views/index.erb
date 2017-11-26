@@ -43,7 +43,7 @@
          
          function post_tv_function(_action = '', _source = '') {
             $.post( "/tv", { action: _action, source: _source }, function (data) {
-               $("#result").html("<p id=\"television\">" + JSON.stringify(data) + "</p>");
+               $("#television").html("<p id=\"television\">" + JSON.stringify(data) + "</p>");
             });
          }
       </script>
