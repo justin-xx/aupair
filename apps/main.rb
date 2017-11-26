@@ -6,8 +6,7 @@ class MainController < Aupair::Base
   
   get '/' do
     content_type :html
-    @tv = Television.instance
-    erb :television
+    erb :index
   end
 
 end
