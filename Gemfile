@@ -11,3 +11,5 @@ gem 'hue'
 gem 'json'
 
 gem 'nest_thermostat'
+
+gem 'google-cloud-speech'
