@@ -3,3 +3,5 @@ Gemfile.lock
 log/*.log
 
 .DS_Store
+
+config/google.json

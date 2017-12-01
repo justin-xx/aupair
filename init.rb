@@ -7,6 +7,7 @@ require 'nest_thermostat'
 
 %w{
   sinatra sinatra/base singleton json nest_thermostat
+  google/cloud/speech
 }.each {|gem| require gem }
 
 
