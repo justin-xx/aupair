@@ -25,6 +25,16 @@
       <p id="television">
       </p>
       
+      <p>
+         <a id="lights_off" name="off" href="#">Turn lights off</a>
+         <a id="lights_on" name="on" href="#">Turn lights on</a>
+         <a id="lights_on_read" name="read" href="#">Turn lights on (Read)</a>         
+         <a id="lights_on_dim" name="dim" href="#">Turn lights on (Dim)</a>                  
+      </p>
+      
+      <p id="bridge">
+      </p>
+      
       <script type="text/javascript">
          $("#tv_on").click(function(){
             post_tv_function("turn_display_on");               
@@ -45,8 +55,36 @@
             $.post( "/tv", { action: _action, source: _source }, function (data) {
                $("#television").html("<p id=\"television\">" + JSON.stringify(data) + "</p>");
             });
-         }
+         };
+         
+         $("#lights_on").click(function(){
+            post_lights_function("on");               
+            return null;            
+         });
+         
+         $("#lights_off").click(function(){
+            post_lights_function("off");               
+            return null;
+         });
+         
+         $("#lights_on_read").click(function(){            
+            post_lights_function("read");      
+            return null;
+         });
+         
+         $("#lights_on_dim").click(function(){            
+            post_lights_function("dim");      
+            return null;
+         });
+         
+         function post_lights_function(_action = '') {
+            $.post( "/lights", { action: _action}, function (data) {
+               $("#bridge").html("<p id=\"bridge\">" + JSON.stringify(data) + "</p>");
+            });
+         }                
       </script>
+      
+
       
    </body>
    

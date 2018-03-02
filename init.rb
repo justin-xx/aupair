@@ -1,6 +1,5 @@
 %w{
-  sinatra sinatra/base singleton json nest_thermostat
-  google/cloud/speech
+  sinatra sinatra/base singleton json nest_thermostat hue
 }.each {|gem| require gem }
 
 
