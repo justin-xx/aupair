@@ -103,8 +103,5 @@ class HueBridge
     end
     sleep 5
   end
-
-
-
   
 end
