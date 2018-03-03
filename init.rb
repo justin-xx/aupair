@@ -1,5 +1,5 @@
 %w{
-  sinatra sinatra/base singleton json nest_thermostat hue
+  sinatra sinatra/base singleton json nest_thermostat hue eye
 }.each {|gem| require gem }
 
 
