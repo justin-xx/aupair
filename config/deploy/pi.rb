@@ -9,6 +9,13 @@ set :ssh_options, {
 
 namespace :deploy do
   
+  before :starting, :ensure_user do
+    on roles(:web) do      
+      execute "cd #{current_path}/lib/eye/processes; eye load ../aupair.eye; eye stop thin"
+    end
+  end
+  
+  
   desc "Install the build-essential apt package"
   task :install_build_essentials do
     on roles(:web) do
@@ -27,6 +34,15 @@ namespace :deploy do
   end
 
   after "deploy:updated", "deploy:bundle_install"
+  
+  task :start_thin do
+    on roles(:web) do      
+      execute "cd #{current_path}/lib/eye/processes; eye load ../aupair.eye; eye start thin"
+    end
+  end
+  
+  after "deploy:finished", "deploy:start_thin"
+  
 end
 
 
