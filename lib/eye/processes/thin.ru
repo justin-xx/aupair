@@ -4,21 +4,26 @@ map '/' do
   run MainController
 end
 
-map '/tv' do
-  run TelevisionController
+map '/weather' do
+  run WeatherController
 end
 
 map '/house' do
   run HouseController
 end
 
+map '/rooms' do
+  run RoomsController
+end
+
 map '/lights' do
   run LightsController
 end
 
-map '/rooms' do
-  run RoomsController
+map '/tv' do
+  run TelevisionController
 end
+
 #
 # map '/thermostat' do
 #   run ThermostatController
