@@ -105,3 +105,23 @@ class HueBridge
   end
   
 end
+
+module Hue
+  class Light
+    def to_json
+      {
+        identifier:        self.id,
+        name:              self.name,
+        hue:               self.hue,
+        saturation:        self.saturation,
+        brightness:        self.brightness,
+        x:                 self.x, 
+        y:                 self.y,         
+        color_temperature: self.color_temperature,                 
+        color_mode:        self.color_mode,                         
+        type:              self.type,                                 
+        model:             self.model
+      }.to_json
+    end
+  end
+end
