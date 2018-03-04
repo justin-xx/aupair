@@ -79,7 +79,7 @@ class HueBridge
   def to_json
     {
       address: @address,
-      lights: @client.lights
+      lights: @client.lights.collect {|light| light.hue_attributes}
     }.to_json
   end
 
@@ -108,7 +108,7 @@ end
 
 module Hue
   class Light
-    def to_json
+    def hue_attributes
       {
         identifier:        self.id,
         name:              self.name,
@@ -121,7 +121,7 @@ module Hue
         color_mode:        self.color_mode,                         
         type:              self.type,                                 
         model:             self.model
-      }.to_json
+      }
     end
   end
 end

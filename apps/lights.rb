@@ -1,6 +1,3 @@
-%w{hue}.each {|gem| require gem}
-
-
 class LightsController < Aupair::Base
   
   before do
