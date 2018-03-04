@@ -8,8 +8,16 @@ map '/tv' do
   run TelevisionController
 end
 
+map '/house' do
+  run HouseController
+end
+
 map '/lights' do
   run LightsController
+end
+
+map '/rooms' do
+  run RoomsController
 end
 #
 # map '/thermostat' do
