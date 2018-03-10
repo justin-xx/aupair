@@ -10,5 +10,5 @@ gem 'capistrano'
 gem 'hue'
 gem 'json'
 
-gem 'nest_thermostat'
+gem 'nest_thermostat', :github => 'justin-xx/nest_thermostat'
 gem 'eye'

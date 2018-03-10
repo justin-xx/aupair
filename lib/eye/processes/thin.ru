@@ -24,7 +24,6 @@ map '/tv' do
   run TelevisionController
 end
 
-#
-# map '/thermostat' do
-#   run ThermostatController
-# end
+map '/thermostat' do
+ run ThermostatController
+end
