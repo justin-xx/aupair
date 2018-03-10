@@ -8,10 +8,5 @@ class ThermostatController < Aupair::Base
     @thermostat = Thermostat.instance
     @thermostat.to_json
   end
-  
-  post '/' do
-    @thermostat = Thermostat.instance
-    @thermostat.to_json
-  end
 
 end
