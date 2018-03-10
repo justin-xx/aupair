@@ -16,10 +16,15 @@ class Weather
   def to_json
     {
       
-      current_conditions: self.current_conditions,
-      forecast:           self.forecast
+      current_conditions:  self.current_conditions,
+      current_temperature: self.current_temperature,
+      forecast:            self.forecast
       
     }.to_json
+  end
+  
+  def current_temperature
+    c2f(k2c(self.current_conditions["main"]["temp"]))
   end
   
   def current_conditions
@@ -57,6 +62,15 @@ class Weather
   def download_forecast(_zip = '45342')
     `curl -u "justin@justinrich.com:CeeccicZadyat4I" \
           "http://api.openweathermap.org/data/2.5/forecast?zip=#{_zip}&APPID=40ab86b4909f9e4e7519e4d5aecc65d0"`
+  end
+  
+  def k2c(degrees)
+    degrees.to_f - 273.15
+  end
+  
+  
+  def c2f(degrees)
+    (degrees.to_f * 9.0 / 5 + 32).round(3)
   end
   
 end

@@ -8,7 +8,7 @@
    <meta name="description" content="">
    <meta name="author" content="">
 
-   <title>Resume - Start Bootstrap Theme</title>
+   <title>Aupair API</title>
    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
    </head>
    
@@ -37,6 +37,13 @@
       <p id="bridge">
       </p>
       
+      <div id="thermostat">
+      
+         
+         Indoor <p id="thermostat-status"></p>
+         Outdoor <p id="weather-status"></p>
+      </div>
+      
       <script type="text/javascript">
          $("#tv_on").click(function(){
             post_tv_function("turn_display_on");               
@@ -59,36 +66,61 @@
             });
          };
          
-         $("#lights_on").click(function(){
-            post_lights_function("on");               
-            return null;            
-         });
-         
-         $("#lights_off").click(function(){
-            post_lights_function("off");               
-            return null;
-         });
-         
-         $("#lights_on_read").click(function(){            
-            post_lights_function("read");      
-            return null;
-         });
-         
-         $("#lights_on_dim").click(function(){            
-            post_lights_function("dim");      
-            return null;
-         });
-         
-         $("#lights_on_concentrate").click(function(){            
-            post_lights_function("concentrate");      
-            return null;
-         });
-         
          function post_lights_function(_action = '') {
             $.post( "/house", { action: _action}, function (data) {
                $("#house").html("<p id=\"house\">" + JSON.stringify(data) + "</p>");
             });
-         }                
+         }                   
+         
+         function loadThermostatStatus() {
+            $.getJSON( "/thermostat", function (data){
+               var items = [];
+                $.each( data, function( key, val ) {
+                  items.push( "<li id='" + key + "'>" + val + "</li>" );
+                });
+                
+               $("#thermostat-status").html("<p id=\"thermostat-status\">" + 
+                   JSON.stringify(data["current_temperature"]) + "</p>");
+            });                     
+         }     
+         
+         function loadWeatherStatus() {
+            $.getJSON( "/weather", function (data){                
+               $("#weather-status").html("<p id=\"weather-status\">" + 
+                  JSON.stringify(data["current_temperature"]) + "</p>");
+            });                     
+         }     
+         
+         
+         $( document ).ready(function(){
+            loadThermostatStatus();
+            loadWeatherStatus();
+            
+            $("#lights_on").click(function(){
+               post_lights_function("on");               
+               return null;            
+            });
+         
+            $("#lights_off").click(function(){
+               post_lights_function("off");               
+               return null;
+            });
+         
+            $("#lights_on_read").click(function(){            
+               post_lights_function("read");      
+               return null;
+            });
+         
+            $("#lights_on_dim").click(function(){            
+               post_lights_function("dim");      
+               return null;
+            });
+         
+            $("#lights_on_concentrate").click(function(){            
+               post_lights_function("concentrate");      
+               return null;
+            });
+         });
       </script>
       
 
