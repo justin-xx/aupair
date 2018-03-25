@@ -41,8 +41,14 @@ namespace :deploy do
     end
   end
   
-  after "deploy:finished", "deploy:start_thin"
+  task :copy_server_sh do
+    on roles(:web) do
+      execute "ln -nfs #{shared_path}/start-server.sh #{current_path}/lib/eye/processes"
+    end
+  end
   
+  after "deploy:finished", "deploy:start_thin"
+  after "deploy:finished", "deploy:copy_server_sh"
 end
 
 

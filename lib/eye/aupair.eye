@@ -22,4 +22,8 @@ Eye.application 'aupair' do
   end
   
   
+  process :infoboard do
+     start_command '/usr/bin/python3 /home/pi/Videos/info-board.py'
+     stop_signals [:QUIT, 2.seconds, :TERM, 1.seconds, :KILL]
+  end
 end
