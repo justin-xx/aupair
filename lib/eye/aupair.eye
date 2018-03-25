@@ -14,7 +14,7 @@ Eye.application 'aupair' do
   # thin process, self daemonized
   process :thin do
     pid_file 'thin.pid'
-    start_command 'bundle exec thin start -R thin.ru -p 8080 -d -l thin.log -P thin.pid'
+    start_command '/usr/local/bin/bundle exec thin start -R thin.ru -p 8080 -d -l thin.log -P thin.pid'
     stop_signals [:QUIT, 2.seconds, :TERM, 1.seconds, :KILL]
 
     check :http, url: 'http://127.0.0.1:8080/lights', pattern: /World/,
