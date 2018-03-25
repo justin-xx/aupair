@@ -4,7 +4,7 @@ Eye.config do
 end
 
 Eye.application 'aupair' do  
-  working_dir File.expand_path('processes', __FILE__)
+  working_dir File.expand_path('../processes', File.dirname(__FILE__))
   stdall 'trash.log' # stdout,err logs for processes by default
   env 'APP_ENV' => 'production' # global env for each processes
   trigger :flapping, times: 10, within: 1.minute, retry_in: 10.minutes
