@@ -12,19 +12,48 @@ class Weather
     set_current_conditions
     set_forecast
   end
+  
+  def attributes
+    {
+      current_main_weather: self.current_main_weather,
+      current_description:  self.current_description,
+      current_temperature:  self.current_temperature,
+      temperature_max:      self.temperature_max,
+      temperature_min:      self.temperature_min,
+      wind_speed:           self.wind_speed
+    }
+  end
 
   def to_json
-    {
-      
-      current_conditions:  self.current_conditions,
-      current_temperature: self.current_temperature,
-      forecast:            self.forecast
-      
-    }.to_json
+    attributes.to_json
   end
   
   def current_temperature
     c2f(k2c(self.current_conditions["main"]["temp"]))
+  end
+  
+  def current_main_weather
+    self.current_conditions["weather"].inject("") do |str, weather|
+      str << weather["main"]
+    end
+  end
+  
+  def current_description
+    self.current_conditions["weather"].inject("") do |str, weather|
+      str << weather["description"]
+    end
+  end
+  
+  def temperature_max
+    c2f(k2c(self.current_conditions["main"]["temp_max"]))
+  end
+  
+  def temperature_min
+    c2f(k2c(self.current_conditions["main"]["temp_min"]))
+  end
+  
+  def wind_speed
+    self.current_conditions["wind"]["speed"]
   end
   
   def current_conditions
@@ -33,7 +62,6 @@ class Weather
     end
     @current_conditions
   end
-
   
   def forecast
     if (Time.now - @forecast_set_at) > (60 * 15) # (1m = 60s)
