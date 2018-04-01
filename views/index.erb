@@ -87,7 +87,7 @@
          function loadWeatherStatus() {
             $.getJSON( "/weather", function (data){                
                $("#weather-status").html("<p id=\"weather-status\">" + 
-                  JSON.stringify(data["current_temperature"]) + "</p>");
+                  JSON.stringify(data["temperature"]) + "</p>");
             });                     
          }     
          
@@ -97,7 +97,7 @@
             loadWeatherStatus();
             
             $("#lights_on").click(function(){
-               post_lights_function("on");               
+               post_lights_function("bright");               
                return null;            
             });
          
