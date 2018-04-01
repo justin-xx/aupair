@@ -27,8 +27,31 @@ def font(size = 24, name = 'HelveticaNeue-01.ttf'):
 def center_text(draw, msg, ):
     w, h = draw.textsize(msg)
     
+icon_mappings = {
+    'chanceflurries': 'ModSnow',
+    'chancerain': 'ModRain',
+    'chancesleet': 'ModSleet',
+    'chancesnow': 'ModSnow',
+    'chancetstorms': 'CloudRainThunder',
+    'clear': 'Clear',
+    'cloudy': 'Cloudy',
+    'flurries': 'ModSnow',
+    'fog': 'Fog',
+    'hazy': 'Mist',
+    'mostlycloudy': 'PartlyCloudyDay',
+    'mostlysunny': 'Sunny',
+    'partlycloudy': 'PartlyCloudyDay',
+    'partlysunny': '',
+    'sleet': 'ModSleet',
+    'rain': 'OccLightRain',
+    'snow': 'HeavySnow',
+    'sunny': 'Sunny',
+    'tstorms': 'CloudRainThunder'     
+}
+
 filename = '/home/pi/Documents/aupair/current/lib/infoboard/infoboard-five-day.png'
 writePidFile()
+
 
 while True:
     try:
@@ -37,10 +60,10 @@ while True:
         end
 
     current_conditions = r.json()['current_conditions']
-    print(int(current_conditions['temperature']))
     
     forecasts_by_day = r.json()['forecasts']['forecasts_by_day']
     print(forecasts_by_day)
+    
     img = Image.new('RGBA', (1920, 1080), (255, 0, 0, 0))
 
     draw = ImageDraw.Draw(img)
@@ -72,10 +95,13 @@ while True:
     days_of_week_y_offset = 249.121
     days_of_week = ['NOW', forecasts_by_day[0]['weekday'], forecasts_by_day[1]['weekday'], forecasts_by_day[2]['weekday'], forecasts_by_day[3]['weekday']]
     
-    highs_of_week_y_offset = 531.229
+    icons_of_week_y_offset = 326.118
+    icons_of_week = ['sunny', forecasts_by_day[0]['icon'], forecasts_by_day[1]['icon'], forecasts_by_day[2]['icon'], forecasts_by_day[3]['icon']]
+    
+    highs_of_week_y_offset = 560.229
     highs_of_week = [str(int(current_conditions['temperature'])), forecasts_by_day[0]['high'], forecasts_by_day[1]['high'], forecasts_by_day[2]['high'], forecasts_by_day[3]['high']]
     
-    lows_of_week_y_offset = 650.582
+    lows_of_week_y_offset = 679.582
     lows_of_week = ['', forecasts_by_day[0]['high'], forecasts_by_day[1]['high'], forecasts_by_day[2]['high'], forecasts_by_day[3]['high']]
     
     conditions_of_week_y_offset = 736.091
@@ -91,6 +117,15 @@ while True:
         x_offset = (bucket_width-w)/2 + x_offsets[index]
        
         draw.text((x_offset, days_of_week_y_offset), msg, align='center',font=fnt,fill=(255, 255, 255, 255))
+    
+    for index, icon in enumerate(icons_of_week):
+        icon_filepath = '/home/pi/Documents/aupair/current/lib/infoboard/weather/{0}.png'.format(icon_mappings[icon])
+        icon_file = Image.open(icon_filepath)
+        
+        x_offset = int((bucket_width-icon_file.width)/2 + x_offsets[index]-10)
+                
+        # 3rd param indicates alpha mask to use for first parameter
+        img.paste(icon_file, (x_offset, int(icons_of_week_y_offset)), icon_file)
     
     for index, high in enumerate(highs_of_week):
         fnt      = font(117)
@@ -125,7 +160,7 @@ while True:
         x_offset = (bucket_width-w)/2 + x_offsets[index]
        
         draw.text((x_offset, conditions_of_week_y_offset), msg, align='center',font=fnt,fill=(255, 255, 255, 255))
-        
+
     img.save(filename, 'PNG')
 
     time.sleep(60*120)

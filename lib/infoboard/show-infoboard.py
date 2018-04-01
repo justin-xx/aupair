@@ -2,10 +2,10 @@ import subprocess
 from threading import Timer
 
 
-def filename(name = 'weather'):
-    return "/home/pi/Documents/aupair/current/lib/eye/tmp/infoboard-top-{0}.png".format(name)
+def filename(name):
+    return "/home/pi/Documents/aupair/current/lib/infoboard/infoboard-{0}.png".format(name)
 
-images_times = [['weather',50], ['datetime', 10]]
+images_times = [['five-day',60]]
 
 while True:
     
