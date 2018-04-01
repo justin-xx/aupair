@@ -20,17 +20,17 @@ Eye.application 'aupair' do
     stop_signals [:QUIT, 2.seconds, :TERM, 1.seconds, :KILL]
   end
   
-  process :infoboard_top_weather do
-     pid_file 'infoboard-top-weather.pid'
+  process :infoboard_current_conditions do
+     pid_file 'infoboard-current-conditions'
      start_timeout 100.seconds     
-     start_command '/usr/bin/python3 /home/pi/Documents/aupair/current/lib/infoboard/infoboard-top-weather.py'
+     start_command '/usr/bin/python3 /home/pi/Documents/aupair/current/lib/infoboard/infoboard-current-conditions.py'
      stop_signals [:QUIT, 2.seconds, :TERM, 1.seconds, :KILL]
   end
   
-  process :infoboard_top_datetime do
-     pid_file 'infoboard-top-datetime.pid'
+  process :infoboard_five_day do
+     pid_file 'infoboard-five-day.pid'
      start_timeout 100.seconds     
-     start_command '/usr/bin/python3 /home/pi/Documents/aupair/current/lib/infoboard/infoboard-top-datetime.py'
+     start_command '/usr/bin/python3 /home/pi/Documents/aupair/current/lib/infoboard/infoboard-five-day.py'
      stop_signals [:QUIT, 2.seconds, :TERM, 1.seconds, :KILL]
   end
 end
