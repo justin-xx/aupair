@@ -24,6 +24,9 @@ def writePidFile():
 def font(size = 24, name = 'HelveticaNeue-01.ttf'):    
     return ImageFont.truetype("/home/pi/Documents/aupair/current/lib/typefaces/{0}".format(name), size, encoding="utf-8");
 
+def center_text(draw, msg, ):
+    w, h = draw.textsize(msg)
+    
 filename = '/home/pi/Documents/aupair/current/lib/infoboard/infoboard-five-day.png'
 writePidFile()
 
@@ -33,26 +36,23 @@ while True:
     except ConnectionError as e:
         end
 
-    temp = int(round(r.json()["current_temperature"]))
-    main = r.json()["current_main_weather"]
-    desc = r.json()["current_description"]
-
+    current_conditions = r.json()['current_conditions']
+    print(int(current_conditions['temperature']))
+    
+    forecasts_by_day = r.json()['forecasts']['forecasts_by_day']
+    print(forecasts_by_day)
     img = Image.new('RGBA', (1920, 1080), (255, 0, 0, 0))
 
     draw = ImageDraw.Draw(img)
 
-    # draw.text((0,0), str(temp), font=font(170),fill=(255, 255, 255, 255))
-    #
     # draw.text((170,0), u"\u00b0", font=font(77),fill=(255, 255, 255, 255))
-    #
-    # draw.text((250,40), main, font=font(130),fill=(255, 255, 255, 255))
-
+    
     ## HEADER
     draw.rectangle([(294.194,102.000), (294.194+464.531,102.000+90.113)],  (0, 0, 0, int(255*0.7)))
 
     draw.rectangle([(758.725,102.000), (758.725 +237.447,102.000+90.113)],  (0, 0, 0, int(255*0.5)))
 
-    draw.text((376.945,115.111), "Miamisburg", font=font(55),fill=(255, 255, 255, 255))
+    draw.text((376.945,115.111), current_conditions['city'], font=font(55),fill=(255, 255, 255, 255))
 
     localTime = datetime.now().replace(tzinfo=pytz.utc).astimezone(pytz.timezone('America/New_York'))
 
@@ -60,71 +60,72 @@ while True:
 
     ## MAIN CONTAINER
 
-    draw.rectangle([(294.194,218.696), (294.194+1329.612,218.696+690.263)],  (127, 127, 127, int(255*0.4)))
+    # draw.rectangle([(294.194,218.696), (294.194+1329.612,218.696+690.263)],  (127, 127, 127, int(255*0.4)))
 
     ## FORECAST BUCKETS
+    bucket_width  = 246.0008
+    bucket_height = 690.263
+    bucket_y_offset = 218.696
+    
+    x_offsets = [294.194,565.095,835.996,1106.897,1377.798]
+    
+    days_of_week_y_offset = 249.121
+    days_of_week = ['NOW', forecasts_by_day[0]['weekday'], forecasts_by_day[1]['weekday'], forecasts_by_day[2]['weekday'], forecasts_by_day[3]['weekday']]
+    
+    highs_of_week_y_offset = 531.229
+    highs_of_week = [str(int(current_conditions['temperature'])), forecasts_by_day[0]['high'], forecasts_by_day[1]['high'], forecasts_by_day[2]['high'], forecasts_by_day[3]['high']]
+    
+    lows_of_week_y_offset = 650.582
+    lows_of_week = ['', forecasts_by_day[0]['high'], forecasts_by_day[1]['high'], forecasts_by_day[2]['high'], forecasts_by_day[3]['high']]
+    
+    conditions_of_week_y_offset = 736.091
+    conditions_of_week = [current_conditions['weather'], forecasts_by_day[0]['conditions'], forecasts_by_day[1]['conditions'], forecasts_by_day[2]['conditions'], forecasts_by_day[3]['conditions']]
+    
+    for x_offset in x_offsets:    
+        draw.rectangle([(x_offset,bucket_y_offset), (x_offset+bucket_width,bucket_y_offset+bucket_height)],  (26, 26, 26, int(255*0.7)))
 
-    draw.rectangle([(294.194,218.696), (294.194+246.008,218.696+690.263)],  (26, 26, 26, int(255*0.7)))
-
-    draw.rectangle([(565.095,218.696), (565.095+246.008,218.696+690.263)],  (26, 26, 26, int(255*0.7)))
-
-    draw.rectangle([(835.996,218.696), (835.996+246.008,218.696+690.263)],  (26, 26, 26, int(255*0.7)))
-
-    draw.rectangle([(1106.897,218.696), (1106.897+246.008,218.696+690.263)],  (26, 26, 26, int(255*0.7)))
-
-    draw.rectangle([(1377.798,218.696), (1377.798+246.008,218.696+690.263)],  (26, 26, 26, int(255*0.7)))
-
-    # DAYS OF WEEK
-
-    draw.text((342.347,249.121), "SUN", font=font(70),fill=(255, 255, 255, 255))
-
-    draw.text((603.523,249.121), "MON", font=font(70),fill=(255, 255, 255, 255))
-
-    draw.text((890.695,249.121), "TUE", font=font(70),fill=(255, 255, 255, 255))
-
-    draw.text((1149.932,249.121), "WED", font=font(70),fill=(255, 255, 255, 255))
-
-    draw.text((1428.500,249.121), "THU", font=font(70),fill=(255, 255, 255, 255))
-
-    # HIGHS
-
-    draw.text((358.626,531.229), "49", font=font(117),fill=(255, 255, 255, 255))
-
-    draw.text((629.528,531.229), "49", font=font(117),fill=(255, 255, 255, 255))
-
-    draw.text((901.591,531.229), "73", font=font(117),fill=(255, 255, 255, 255))
-
-    draw.text((1170.833,531.229), "60", font=font(117),fill=(255, 255, 255, 255))
-
-    draw.text((1441.935,531.229), "46", font=font(117),fill=(255, 255, 255, 255))
-
-
-    # LOW
-
-    draw.text((376.533,634.582), "36", font=font(81),fill=(255, 255, 255, 255))
-
-    draw.text((649.036 ,634.582), "31", font=font(81),fill=(255, 255, 255, 255))
-
-    draw.text((920.372,634.582), "47", font=font(81),fill=(255, 255, 255, 255))
-
-    draw.text((1189.13,634.582), "34", font=font(81),fill=(255, 255, 255, 255))
-
-    draw.text((1460.182,634.582), "28", font=font(81),fill=(255, 255, 255, 255))
-
-    # MULTILINE
-
-    draw.text((376.533,634.582), "36", font=font(81),fill=(255, 255, 255, 255))
-
-    draw.multiline_text((327.441,736.091), "Rain And\nSnow", fill=None, font=font(46), anchor=None, spacing=5, align="center")
-
-    draw.multiline_text((598.341,736.091), "Rain And\nSnow", fill=None, font=font(46), anchor=None, spacing=5, align="center")
-
-    draw.multiline_text((869.876,736.091), "Scattered\nThunder\nStorms", fill=None, font=font(46), anchor=None, spacing=5, align="center")
-
-    draw.multiline_text((1150.161,736.091), "Showers", fill=None, font=font(46), anchor=None, spacing=5, align="center")
-
-    draw.multiline_text((1436.077,736.091), "Partly\nCloudy", fill=None, font=font(46), anchor=None, spacing=5, align="center")
-
+    for index, day in enumerate(days_of_week):
+        fnt      = font(70)
+        msg      = str(day).upper()
+        w, h     = draw.textsize(msg, font=fnt)
+        x_offset = (bucket_width-w)/2 + x_offsets[index]
+       
+        draw.text((x_offset, days_of_week_y_offset), msg, align='center',font=fnt,fill=(255, 255, 255, 255))
+    
+    for index, high in enumerate(highs_of_week):
+        fnt      = font(117)
+        msg      = high
+        w, h     = draw.textsize(msg, font=fnt)
+        x_offset = (bucket_width-w)/2 + x_offsets[index]
+       
+        draw.text((x_offset, highs_of_week_y_offset), msg, align='center',font=fnt,fill=(255, 255, 255, 255))
+    
+    for index, low in enumerate(lows_of_week):
+        fnt      = font(50)
+        msg      = low
+        w, h     = draw.textsize(msg, font=fnt)
+        x_offset = (bucket_width-w)/2 + x_offsets[index]
+       
+        draw.text((x_offset, lows_of_week_y_offset), msg, align='center',font=fnt,fill=(255, 255, 255, 255))
+        
+    for index, conditions in enumerate(conditions_of_week):
+        fnt      = font(46)
+        words    = conditions.split()
+        parts    = []
+        
+        for word in words:
+            if word == "Thunderstorm":
+                parts.append("Thunder\nstorm")
+            else:
+                parts.append(word)
+            
+        
+        msg      = "\n".join(parts)
+        w, h     = draw.textsize(msg, font=fnt)
+        x_offset = (bucket_width-w)/2 + x_offsets[index]
+       
+        draw.text((x_offset, conditions_of_week_y_offset), msg, align='center',font=fnt,fill=(255, 255, 255, 255))
+        
     img.save(filename, 'PNG')
 
-    time.sleep(60)
+    time.sleep(60*120)

@@ -34,9 +34,9 @@ while True:
     except ConnectionError as e:
         end
 
-    temp = int(round(r.json()["current_temperature"]))
-    main = r.json()["current_main_weather"]
-    desc = r.json()["current_description"]
+    current_conditions = r.json()['current_conditions']
+    
+    forecasts_by_day = r.json()['forecasts']['forecasts_by_day']
 
     img = Image.new('RGBA', (1920, 1080), (255, 0, 0, 0))
 
@@ -53,7 +53,7 @@ while True:
 
     draw.rectangle([(758.725,102.000), (758.725 +237.447,102.000+90.113)],  (0, 0, 0, int(255*0.5)))
 
-    draw.text((376.945,115.111), "Miamisburg", font=font(55),fill=(255, 255, 255, 255))
+    draw.text((376.945,115.111), current_conditions['city'], font=font(55),fill=(255, 255, 255, 255))
 
     localTime = datetime.now().replace(tzinfo=pytz.utc).astimezone(pytz.timezone('America/New_York'))
 
