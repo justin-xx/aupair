@@ -38,6 +38,79 @@ end
 
 module Hue
   class Light
+    Bright = {
+      :on => true,
+      :saturation => 254,
+      :brightness => 254, 
+      :color_temperature => 300, 
+      :colormode => "ct"
+    }
+    
+    BloomBright = {
+      :on => true,
+      :sat => 25,
+      :hue => 46920
+    }
+    
+    Brightdim = {
+      :on => true,
+      :saturation => 254,
+      :brightness => 153, 
+      :color_temperature => 300, 
+      :colormode => "ct"
+    }
+    
+    BloomBrightdim = {
+      :on => true,
+      :sat => 25,
+      :hue => 46920,
+      :brightness=>153
+    }
+    
+    Concentrate = {
+      :on => true,
+      :saturation => 254,
+      :brightness => 254, 
+      :color_temperature => 233, 
+      :colormode => "ct"
+    }
+    
+    BloomConcentrate = {
+      :on => true,
+      :sat => 25,
+      :hue => 46920,
+      :brightness=>254
+    }
+    
+    Dim = {
+      :on => true, 
+      :brightness => 62, 
+      :color_temperature => 447, 
+      :colormode => "ct"
+    }
+    
+    BloomDim  = {
+      :on => true,
+      :sat => 25,
+      :hue => 46920,
+      :brightness => 62
+    }
+    
+    Read = {
+      :on => true,
+      :saturation => nil,
+      :brightness => 220, 
+      :color_temperature => 343, 
+      :colormode => "ct"
+    }
+    
+    BloomRead = {
+      :on => true,
+      :sat => 25,
+      :hue => 46920
+    }
+    
+    
     def hue_attributes
       {
         identifier:        self.id,
@@ -52,6 +125,23 @@ module Hue
         type:              self.type,                                 
         model:             self.model
       }
+    end
+    
+    def set_recipe(recipe = 'Bright')
+      recipe_name = !self.bloom? ? recipe.capitalize : 'Bloom' + recipe.capitalize
+      puts recipe_name
+      attrs = Hue::Light.const_get(recipe_name)
+      puts attrs
+      self.set_state(attrs)  
+    end
+    
+    def set_off
+      self.set_state({:on => false})
+    end
+    
+    
+    def bloom?
+      /Bloom/.match(self.name) || /Color light/.match(self.type)
     end
   end
   

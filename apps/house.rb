@@ -15,14 +15,8 @@ class HouseController < Aupair::Base
     case params['action']
     when 'off'
       @house.set_lights_to_off
-    when 'on'
-      @house.set_lights_to_bright
-    when 'dim'
-      @house.set_lights_to_dim      
-    when 'read'
-      @house.set_lights_to_read
-    when 'concentrate'
-      @house.set_lights_to_concentrate
+    else
+      @house.set_lights_to_recipe(params['action'])
     end
   
     @house.to_json

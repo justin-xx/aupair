@@ -17,67 +17,16 @@ class House
     @lights = @bridge.lights
   end
   
-  def set_lights_to_concentrate
-    set_lights({
-        :on => true,
-        :saturation => 254,
-        :brightness => 254, 
-        :color_temperature => 233, 
-        :colormode => "ct"
-    })
-  
-    set_blooms({
-      :sat => 25,
-      :hue => 46920
-    })
-  end
-
-  def set_lights_to_bright
-    set_lights({
-        :on => true,
-        :saturation => 254,
-        :brightness => 254, 
-        :color_temperature => 300, 
-        :colormode => "ct"
-    })
-    
-    set_blooms({
-      :sat => 25,
-      :hue => 46920
-    })
-  end
-
-  def set_lights_to_read
-    set_lights({
-        :on => true,
-        :saturation => nil,
-        :brightness => 220, 
-        :color_temperature => 343, 
-        :colormode => "ct"
-    })
-  
-    set_blooms({
-      :sat => 25,
-      :hue => 46920
-    })
-  end
-
-  def set_lights_to_dim
-    set_lights({
-        :on => true, 
-        :brightness => 62, 
-        :color_temperature => 447, 
-        :colormode => "ct"
-    })
-  
-    set_blooms({
-      :sat => 25,
-      :hue => 46920
-    })
+  def set_lights_to_recipe(recipe = 'bright')
+    self.lights.each do |light|
+      light.set_recipe(recipe)
+    end
   end
 
   def set_lights_to_off
-    set_lights({:on => false})
+    self.lights.each do |light|
+      light.set_off
+    end
   end
   
   def to_json
@@ -86,23 +35,5 @@ class House
       rooms: self.rooms.collect {|room| room.hue_attributes}
     }.to_json
   end
-  
-  private
-  
-  def set_blooms(_hash = {})
-    blooms = self.lights.find_all {|light| /Bloom/.match(light.name)}
-    blooms.each do |bloom|
-      bloom.set_state(_hash)
-    end
-    sleep 2
-  end
-
-  def set_lights(_hash = {})
-    self.rooms.each do |room|
-      room.set_state(_hash)
-    end
-    sleep 2
-  end
-  
   
 end
