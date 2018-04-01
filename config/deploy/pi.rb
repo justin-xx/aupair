@@ -29,7 +29,7 @@ namespace :deploy do
 
   task :bundle_install do
     on roles(:web) do      
-      execute "cd #{release_path}; bundle install"
+      execute "cd #{release_path}; bundle install --deployment"
     end
   end
 

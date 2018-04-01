@@ -27,7 +27,7 @@ Eye.application 'aupair' do
      stop_signals 'sudo pkill pngview; sudo pkill python' 
   end
   
-  process :infoboard_top_weather do
+  process :infoboard_top_datetime do
      pid_file 'infoboard-top-datetime.pid'
      start_timeout 100.seconds     
      start_command '/usr/bin/python3 /home/pi/Documents/aupair/current/lib/infoboard/infoboard-top-datetime.py'
