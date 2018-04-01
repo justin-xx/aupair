@@ -82,6 +82,7 @@ class Weather
           weekday:    forecastday['date']['weekday_short'],
           month:      forecastday['date']['monthname_short'],
           tz:         forecastday['date']['tz_short'],
+          icon:       forecastday['icon'],
           high:       forecastday['high']['fahrenheit'],
           low:        forecastday['low']['fahrenheit'],
           conditions: forecastday['conditions']
