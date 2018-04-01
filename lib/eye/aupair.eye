@@ -20,10 +20,18 @@ Eye.application 'aupair' do
     stop_signals [:QUIT, 2.seconds, :TERM, 1.seconds, :KILL]
   end
   
-  process :infoboard do
-     pid_file 'infoboard.pid'
+  process :infoboard_top_weather do
+     pid_file 'infoboard-top-weather.pid'
      start_timeout 100.seconds     
-     start_command '/usr/bin/python3 /home/pi/Videos/info-board.py'
-     stop_signals [:QUIT, 2.seconds, :TERM, 1.seconds, :KILL]
+     start_command '/usr/bin/python3 /home/pi/Documents/aupair/current/lib/infoboard/infoboard-top-weather.py'
+     stop_signals 'sudo pkill pngview; sudo pkill python' 
+  end
+  
+  process :infoboard_top_weather do
+     pid_file 'infoboard-top-datetime.pid'
+     start_timeout 100.seconds     
+     start_command '/usr/bin/python3 /home/pi/Documents/aupair/current/lib/infoboard/infoboard-top-datetime.py'
+     stop_signals 'sudo pkill pngview; sudo pkill python' 
   end
 end
+
