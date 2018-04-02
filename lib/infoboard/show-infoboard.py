@@ -5,7 +5,7 @@ from threading import Timer
 def filename(name):
     return "/home/pi/Documents/aupair/current/lib/infoboard/infoboard-{0}.png".format(name)
 
-images_times = [['five-day',60]]
+images_times = [['five-day',60],['current-conditions',20]]
 
 while True:
     
