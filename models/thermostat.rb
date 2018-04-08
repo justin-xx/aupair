@@ -66,7 +66,11 @@ class Thermostat
   
   def load_api_connection!
     if (Time.now.utc - (@updated_at || Time.at(0))) > (60 * 15)
-      @nest_api = NestThermostat::Nest.new(email: 'nest@justinrich.com', password: '.Trseoms1972')   
+      @nest_api = NestThermostat::Nest.new(
+        email: AUPAIR_CONFIG["nest"]["email"], 
+        password: AUPAIR_CONFIG["nest"]["password"]
+      )   
+      
       @status = nest_api.status
       @user_id = nest_api.user_id
       @structure_id =  status['user'][user_id]['structures'][0].split('.')[1]

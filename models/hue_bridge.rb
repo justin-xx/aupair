@@ -30,7 +30,7 @@ class HueBridge
   private
 
   def connect_to_bridge
-    Hue::Client.new('justinrich')
+    Hue::Client.new(AUPAIR_CONFIG["hue"]["account"])
   end
 
 end

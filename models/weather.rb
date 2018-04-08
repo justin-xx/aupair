@@ -40,12 +40,12 @@ class Weather
   
   private
   
-  def download_current_conditions(_zip = '45342')
-    `curl "http://api.wunderground.com/api/eff657faed2487df/conditions/q/OH/#{_zip}.json"`
+  def download_current_conditions(_zip = AUPAIR_CONFIG["weather"]["zip"])
+    `curl "http://api.wunderground.com/api/#{ AUPAIR_CONFIG["weather"]["api"]}/conditions/q/OH/#{_zip}.json"`
   end
   
-  def download_forecasts(_zip = '45342')
-    `curl "http://api.wunderground.com/api/eff657faed2487df/forecast/q/OH/#{_zip}.json"`
+  def download_forecasts(_zip = AUPAIR_CONFIG["weather"]["zip"])
+    `curl "http://api.wunderground.com/api/#{ AUPAIR_CONFIG["weather"]["api"]}/forecast/q/OH/#{_zip}.json"`
   end
   
   def set_current_conditions

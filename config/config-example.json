@@ -1,0 +1,22 @@
+{
+    "features": {
+        "weather": "false",
+        "nest": "false"     
+    },
+    "weather": {
+        "api": "",
+        "zip": ""
+    },
+    "hue": {
+        "account":"justinrich"
+    },
+    "nest": {
+        "email": "",
+        "password": ""
+    },
+    "server": {
+        "ip": "",
+        "port": "8080",
+        "aupair-path": "/home/pi/Documents/aupair/current"
+    }
+}
