@@ -1,5 +1,8 @@
 server "pi", user: "pi", roles: %w{web}
-role :web, %w{pi@pi}, my_property: :my_value
+role :web, %w{pi@pi}
+
+server "pi-test", user: "pi", roles: %w{web, test}
+role :web, %w{pi@pi-test}
 
 set :ssh_options, {
  keys: %w(/home/justin/.ssh/id_rsa),
@@ -9,46 +12,106 @@ set :ssh_options, {
 
 namespace :deploy do
   
-  before :starting, :ensure_user do
-    on roles(:web) do      
-      execute "cd #{current_path}/lib/eye/processes; eye load ../aupair.eye; eye stop thin"
+  task :stop_aupair do
+    on roles(:web) do
+      execute "[ ! -e /home/pi/Documents/aupair/current ] && eye stop aupair"
     end
   end
   
+  task :checkout_raspidmx do
+    on roles(:web) do
+      execute "[ ! -e /home/pi/Documents/aupair/shared/raspidmx ] && git clone https://github.com/AndrewFromMelbourne/raspidmx.git /home/pi/Documents/aupair/shared/; ls"
+    end
+  end
+  
+  task :install_system_gems do
+    on roles(:web) do
+      sudo "gem install thin"
+      sudo "gem install bundler"
+      sudo "gem install eye"
+    end    
+  end
+  
+  task :setup_config do
+    on roles(:web) do
+      config = <<-EOF
+{
+    "features": {
+        "weather": "true",
+        "nest": "true"     
+    },
+    "weather": {
+        "api": "eff657faed2487df",
+        "zip": "45342"
+    },
+    "hue": {
+        "account":"justinrich"
+    },
+    "nest": {
+        "email": "nest@justinrich.com",
+        "password": ".Trseoms1972"
+    },
+    "server": {
+        "ip": "192.168.0.58",
+        "port": "8080",
+        "aupair-path": "/home/pi/Documents/aupair/current"
+    }
+}
+EOF
+      execute "touch #{shared_path}/config.json"
+      execute "cat '#{config}' > #{shared_path}/config.json"
+    end
+  end
   
   desc "Install the build-essential apt package"
   task :install_build_essentials do
     on roles(:web) do
       sudo "apt-get update"
       sudo "apt-get install -y build-essential ruby-dev libcurl4-openssl-dev"
-      sudo "gem install bundler"
     end
   end
-
-  #before :deploy, "deploy:install_build_essentials"  
-
+  
   task :bundle_install do
     on roles(:web) do      
       execute "cd #{release_path}; bundle install --deployment"
     end
   end
-
-  after "deploy:updated", "deploy:bundle_install"
   
-  task :start_thin do
+  task :symlink_raspidmx do
     on roles(:web) do      
-      execute "cd #{current_path}/lib/eye/processes; eye load ../aupair.eye; eye start thin"
+      execute "ln -nfs #{shared_path}/raspidmx #{current_path}/lib/raspidmx"
     end
   end
   
-  task :copy_server_sh do
+  task :symlink_raspidmx do
+    on roles(:web) do      
+      execute "ln -nfs #{shared_path}/config.json #{current_path}/lib/config.json"
+    end
+  end
+  
+  task :start_eye do
+    on roles(:web) do      
+      execute "eye load #{current_path}/lib/eye/aupair.eye; eye restart aupair"
+    end
+  end
+  
+  task :install_pip3_modules do
     on roles(:web) do
-      execute "ln -nfs #{shared_path}/start-server.sh #{current_path}/lib/eye/processes"
+      execute "pip3 install pytz"
     end
   end
-  
-  after "deploy:finished", "deploy:start_thin"
-  after "deploy:finished", "deploy:copy_server_sh"
-end
 
+  before "deploy:starting", :stop_aupair    
+  before "deploy:starting", :setup_config  
+  before "deploy:starting", :install_system_gems
+  before "deploy:starting", :checkout_raspidmx  
+  before "deploy:starting", :install_build_essentials
+
+  after "deploy:updated", :bundle_install
+  after "deploy:updated", :symlink_raspidmx
+  after "deploy:updated", :symlink_config
+  
+  after "deploy:finished", :start_eye
+  after "deploy:finished", :install_pip3_modules
+end
 
