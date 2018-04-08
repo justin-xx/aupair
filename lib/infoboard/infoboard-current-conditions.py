@@ -40,6 +40,7 @@ icon_mappings = {
     'nt_chancerain': 'IsoRainSwrsNight',
     'nt_chancesleet': 'ModSleetSwrsNight',
     'nt_chancetstorms': 'PartCloudRainThunderNight',
+    'nt_chancesnow': 'IsoSnowSwrsNight',
     'nt_clear': 'Clear',
     'nt_cloudy': 'Overcast',
     'nt_flurries': 'IsoSnowSwrsNight',
