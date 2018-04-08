@@ -68,7 +68,8 @@ class Weather
     forecasts_json = JSON.parse(download_forecasts)
         
     _days_and_evenings = forecasts_json['forecast']['txt_forecast']['forecastday'].inject([]) do |memo, forecastday|
-      memo << {                                  
+      memo << {                           
+          period:     forecastday['title'],               
           icon:       forecastday['icon'],
           forecast:   forecastday['fcttext'],
           pop:        forecastday['pop']
