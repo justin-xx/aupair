@@ -13,25 +13,33 @@ Eye.application 'aupair' do
   check :cpu, every: 10.seconds, below: 100, times: 3 # global check for all processes
   
   # thin process, self daemonized
-  process :thin do
-    pid_file 'thin.pid'
-    start_grace 10.seconds
-    start_command "/usr/local/bin/bundle exec thin start -R #{working_dir}/thin.ru -p 8080 -d -l #{working_dir}/thin.log -P #{working_dir}/thin.pid"
-    stop_signals [:QUIT, 2.seconds, :TERM, 1.seconds, :KILL]
-  end
-  
+  # process :thin do
+  #   pid_file 'thin.pid'
+  #   start_timeout 100.seconds
+  #   start_grace 10.seconds
+  #   start_command "/usr/local/bin/bundle exec thin start -R #{working_dir}/thin.ru -p 8080 -d -l #{working_dir}/thin.log -P #{working_dir}/thin.pid"
+  #   stop_signals [:QUIT, 2.seconds, :TERM, 1.seconds, :KILL]
+  # end
+  #
   process :infoboard_current_conditions do
-     pid_file 'infoboard-current-conditions'
-     start_timeout 100.seconds     
+     pid_file 'infoboard-current-conditions.pid'
+     daemonize true
      start_command '/usr/bin/python3 /home/pi/Documents/aupair/current/lib/infoboard/infoboard-current-conditions.py'
      stop_signals [:QUIT, 2.seconds, :TERM, 1.seconds, :KILL]
   end
   
   process :infoboard_five_day do
      pid_file 'infoboard-five-day.pid'
-     start_timeout 100.seconds     
+     daemonize true     
      start_command '/usr/bin/python3 /home/pi/Documents/aupair/current/lib/infoboard/infoboard-five-day.py'
      stop_signals [:QUIT, 2.seconds, :TERM, 1.seconds, :KILL]
   end
+  
+  process :show_infoboard do
+     pid_file 'show-infoboard.pid'
+     daemonize true     
+     start_grace 10.seconds
+     start_command '/usr/bin/python3 /home/pi/Documents/aupair/current/lib/infoboard/show-infoboard.py'
+     stop_signals [:QUIT, 2.seconds, :TERM, 1.seconds, :KILL]
+  end
 end
-
