@@ -113,10 +113,9 @@ while True:
     draw.text((783.725+((237.447-time_w)/2),115.111), time_msg, align='center',font=font(55),fill=(255, 255, 255, 255))    
         
     # TEMP
-    temp_msg = str(int(current_conditions['temperature']))
-    temp_w, temp_h = draw.textsize(temp_msg, font=font(55))    
-    draw.text((1045.538+((110.705-temp_w)/2),115.111), temp_msg, align='center',font=font(55),fill=(255, 255, 255, 255))
-    draw.text((1105.538+((110.705-temp_w)/2),115.111), u"\u00b0", font=font(55),fill=(255, 255, 255, 255))
+    temp_msg = str(int(current_conditions['temperature'])) + u"\u00b0"
+    temp_w, temp_h = fourday_draw.textsize(temp_msg, font=font(55))
+    fourday_draw.text((1050.538+((110.705-temp_w)/2),115.111), temp_msg, align='center',font=font(55),fill=(255, 255, 255, 255))
         
     # CURRENT CONDITIONS
     draw.text((1303.0715,115.111), current_conditions['weather'], align='left',font=font(55),fill=(255, 255, 255, 255))
