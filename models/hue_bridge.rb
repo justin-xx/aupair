@@ -35,7 +35,6 @@ class HueBridge
 
 end
 
-
 module Hue
   class Light
     Bright = {

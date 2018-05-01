@@ -14,7 +14,7 @@ namespace :deploy do
   
   task :stop_aupair do
     on roles(:web) do
-      execute "[ ! -e /home/pi/Documents/aupair/current ] && eye stop aupair"
+      execute "[ ! -e /home/pi/Documents/aupair/current ] && eye stop aupair; ls"
     end
   end
   
@@ -59,7 +59,7 @@ namespace :deploy do
 }
 EOF
       execute "touch #{shared_path}/config.json"
-      execute "cat '#{config}' > #{shared_path}/config.json"
+      execute "echo '#{config}' > #{shared_path}/config.json"
     end
   end
   
@@ -67,7 +67,7 @@ EOF
   task :install_build_essentials do
     on roles(:web) do
       sudo "apt-get update"
-      sudo "apt-get install -y build-essential ruby-dev libcurl4-openssl-dev"
+      sudo "apt-get install -y build-essential ruby-dev libcurl4-openssl-dev libcairo2-dev"
     end
   end
   
@@ -83,9 +83,9 @@ EOF
     end
   end
   
-  task :symlink_raspidmx do
+  task :symlink_config do
     on roles(:web) do      
-      execute "ln -nfs #{shared_path}/config.json #{current_path}/lib/config.json"
+      execute "ln -nfs #{shared_path}/config.json #{current_path}/config/config.json"
     end
   end
   

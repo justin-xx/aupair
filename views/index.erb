@@ -31,15 +31,14 @@
          <a id="lights_on_read" name="read" href="#">Read</a>         
          <a id="lights_on_dim" name="dim" href="#">Dim</a>                  
          <a id="lights_on_concentrate" name="concentrate" href="#">Concentrate</a>                  
-         
+         <a id="lights_on_gaming" name="concentrate" href="#">Gaming</a>                  
+         <a id="lights_on_tv" name="concentrate" href="#">TV</a>                  
       </p>
       
       <p id="bridge">
       </p>
       
-      <div id="thermostat">
-      
-         
+      <div id="thermostat">               
          Indoor <p id="thermostat-status"></p>
          Outdoor <p id="weather-status"></p>
       </div>
@@ -87,7 +86,7 @@
          function loadWeatherStatus() {
             $.getJSON( "/weather", function (data){                
                $("#weather-status").html("<p id=\"weather-status\">" + 
-                  JSON.stringify(data["temperature"]) + "</p>");
+                  JSON.stringify(data["current_conditions"]["temperature"]) + "</p>");
             });                     
          }     
          
@@ -113,6 +112,16 @@
          
             $("#lights_on_dim").click(function(){            
                post_lights_function("dim");      
+               return null;
+            });
+            
+            $("#lights_on_gaming").click(function(){            
+               post_lights_function("gaming");      
+               return null;
+            });
+            
+            $("#lights_on_tv").click(function(){            
+               post_lights_function("tv");      
                return null;
             });
          
