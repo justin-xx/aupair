@@ -12,7 +12,7 @@ Eye.application 'aupair' do
   trigger :flapping, times: 10, within: 1.minute, retry_in: 10.minutes
   check :cpu, every: 10.seconds, below: 100, times: 3 # global check for all processes
   
-  thin process, self daemonized
+  # thin process, self daemonized
   process :thin do
     pid_file 'thin.pid'
     start_timeout 100.seconds
