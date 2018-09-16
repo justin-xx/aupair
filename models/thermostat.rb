@@ -36,7 +36,7 @@ class Thermostat
   
   def away=(_status=true)
     nest_api.away=_status   
-    load_api_connection!     
+    load_api_connection!(true)    
   end
   
   def hue_attributes
@@ -64,8 +64,8 @@ class Thermostat
     (degrees.to_f * 9.0 / 5 + 32).round(3)
   end
   
-  def load_api_connection!
-    if (Time.now.utc - (@updated_at || Time.at(0))) > (60 * 15)
+  def load_api_connection!(_force_reload=false)
+    if (_force_reload || (Time.now.utc - (@updated_at || Time.at(0))) > (60 * 15))
       @nest_api = NestThermostat::Nest.new(
         email: AUPAIR_CONFIG["nest"]["email"], 
         password: AUPAIR_CONFIG["nest"]["password"]

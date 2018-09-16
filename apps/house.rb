@@ -13,6 +13,16 @@ class HouseController < Aupair::Base
     @house = House.instance
       
     case params['action']
+    when 'goodmorning'
+      @house.goodmorning
+    when 'goodnight'
+      @house.goodnight
+    when 'im_leaving'
+      @house.set_away
+    when 'im_home'
+      @house.set_home
+    when 'im_traveling'
+      @house.set_travel
     when 'off'
       @house.set_lights_to_off
     when 'gaming'

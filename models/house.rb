@@ -11,10 +11,55 @@ class House
   
   attr_reader :lights
   
+  attr_reader :away
+  
+  attr_reader :travel
+  
   def initialize
     @bridge = HueBridge.instance
     @rooms = @bridge.groups
     @lights = @bridge.lights
+    @away = false
+  end
+  
+  def goodmorning
+    @home = true
+    @travel = false
+    
+    set_lights_to_recipe('read')
+    Television.instance.set_source
+  end
+  
+  def goodnight
+    @home = true
+    @travel = false
+    
+    Television.instance.turn_display_off
+    self.set_lights_to_off
+  end
+  
+  def set_away
+    @away = true
+    @travel = false
+    
+    self.set_lights_to_off
+    Television.instance.turn_display_off
+  end
+  
+  def set_home
+    @away = false
+    @travel = false
+    
+    set_lights_to_recipe('bright')
+    Television.instance.set_source
+    set_office_gaming
+  end
+   
+  def set_travel
+    @away = true
+    @travel = true
+    
+    Television.instance.turn_display_off
   end
   
   def set_office_gaming
@@ -35,7 +80,7 @@ class House
     ["Office Lightstrip Monitor", "Office rear"].each do |light_name|
       light = @lights.detect {|light| light.name == light_name}
       next unless light
-      light.set_state(gaming_attrs.update({:brightness => 220}))
+      light.set_state(gaming_attrs.update({:brightness => 200}))
     end
     
   end
@@ -83,7 +128,7 @@ class House
       light.set_off
     end
   end
-  
+
   def to_json
     {
       lights: self.lights.collect {|light| light.hue_attributes},
