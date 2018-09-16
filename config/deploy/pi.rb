@@ -34,30 +34,7 @@ namespace :deploy do
   
   task :setup_config do
     on roles(:web) do
-      config = <<-EOF
-{
-    "features": {
-        "weather": "true",
-        "nest": "true"     
-    },
-    "weather": {
-        "api": "eff657faed2487df",
-        "zip": "45342"
-    },
-    "hue": {
-        "account":"justinrich"
-    },
-    "nest": {
-        "email": "nest@justinrich.com",
-        "password": ".Trseoms1972"
-    },
-    "server": {
-        "ip": "192.168.0.58",
-        "port": "8080",
-        "aupair-path": "/home/pi/Documents/aupair/current"
-    }
-}
-EOF
+      config = '{"features": {"weather": "true","nest": "true"},"weather": {"api": "eff657faed2487df","zip": "45342"},"hue": {"account":"justinrich"},"nest": {"email": "nest@justinrich.com","password": ".Trseoms1972"},"server": {"ip": "192.168.0.58","port": "8080","aupair-path": "/home/pi/Documents/aupair/current"}}'
       execute "touch #{shared_path}/config.json"
       execute "echo '#{config}' > #{shared_path}/config.json"
     end
@@ -108,10 +85,11 @@ EOF
   before "deploy:starting", :install_build_essentials
 
   after "deploy:updated", :bundle_install
-  after "deploy:updated", :symlink_raspidmx
-  after "deploy:updated", :symlink_config
-  
+  after "deploy:symlink:release", :symlink_raspidmx
+  after "deploy:symlink:release", :symlink_config
+
   after "deploy:finished", :start_eye
   after "deploy:finished", :install_pip3_modules
+  
 end
 
