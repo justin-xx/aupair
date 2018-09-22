@@ -13,6 +13,7 @@ class Justin
   end
 
   def update_location(_lat,_lng)
+    puts "Updating Location\n#{_lat},#{_lng}"
     @location = Geokit::LatLng.new(_lat,_lng)
   end
   
@@ -22,8 +23,8 @@ class Justin
   
   def to_json
     {
-      :location => [@location.lat, @location.lng],
-      :away => away?
+      location: [@location.lat, @location.lng],
+      away: self.away?
     }.to_json
   end
   

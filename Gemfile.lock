@@ -46,6 +46,7 @@ GEM
       kostya-sigar (~> 2.0.0)
       state_machines
       thor
+    geokit (1.13.1)
     hitimes (1.2.6)
     httparty (0.16.1)
       multi_xml (>= 0.5.2)
@@ -93,6 +94,7 @@ PLATFORMS
 DEPENDENCIES
   capistrano
   eye
+  geokit
   hue
   json
   nest_thermostat!
@@ -100,4 +102,4 @@ DEPENDENCIES
   thin
 
 BUNDLED WITH
-   1.15.4
+   1.16.5
