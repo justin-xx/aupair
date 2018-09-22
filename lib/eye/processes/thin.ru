@@ -1,4 +1,4 @@
-require File.join(File.dirname(__FILE__), "../../../init")
+require File.expand_path('../../../../init', __FILE__)
 
 map '/' do
   run MainController

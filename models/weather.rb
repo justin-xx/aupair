@@ -10,21 +10,18 @@ class Weather
 
   def initialize
     set_current_conditions
-    set_forecast
-  end
-
-  def to_json
-    {
-      
-      current_conditions:  self.current_conditions,
-      current_temperature: self.current_temperature,
-      forecast:            self.forecast
-      
-    }.to_json
+    set_forecasts
   end
   
-  def current_temperature
-    c2f(k2c(self.current_conditions["main"]["temp"]))
+  def attributes
+    {
+      current_conditions: self.current_conditions,
+      forecasts: self.forecasts      
+    }
+  end
+  
+  def to_json
+    self.attributes.to_json
   end
   
   def current_conditions
@@ -33,44 +30,72 @@ class Weather
     end
     @current_conditions
   end
-
   
-  def forecast
-    if (Time.now - @forecast_set_at) > (60 * 15) # (1m = 60s)
-      set_forecast
+  def forecasts
+    if (Time.now - @forecasts_set_at) > (60 * 120) # (1m = 60s)
+      set_forecasts
     end
-    @forecast
+    @forecasts
   end
   
   private
   
+  def download_current_conditions(_zip = AUPAIR_CONFIG["weather"]["zip"])
+    `curl "http://api.wunderground.com/api/#{ AUPAIR_CONFIG["weather"]["api"]}/conditions/q/OH/#{_zip}.json"`
+  end
+  
+  def download_forecasts(_zip = AUPAIR_CONFIG["weather"]["zip"])
+    `curl "http://api.wunderground.com/api/#{ AUPAIR_CONFIG["weather"]["api"]}/forecast/q/OH/#{_zip}.json"`
+  end
+  
   def set_current_conditions
-    @current_conditions = JSON.parse(download_current_conditions)
+    current_conditions_json = JSON.parse(download_current_conditions)
+    
+    conditions = current_conditions_json['current_observation']
+      
+    @current_conditions = {
+      observed:    conditions['observation_epoch'],
+      icon:        conditions['icon'],
+      city:        conditions['display_location']['city'],
+      zip:         conditions['display_location']['zip'],
+      weather:     conditions['weather'],
+      temperature: conditions['temp_f']
+    }
     @current_conditions_set_at = Time.now.utc  
   end
   
-  def download_current_conditions(_zip = '45342')
-    `curl -u "justin@justinrich.com:CeeccicZadyat4I" \
-          "http://api.openweathermap.org/data/2.5/weather?zip=#{_zip}&APPID=40ab86b4909f9e4e7519e4d5aecc65d0"`
-  end
-  
-  def set_forecast
-    @forecast = JSON.parse(download_forecast)
-    @forecast_set_at = Time.now.utc   
-  end
-  
-  def download_forecast(_zip = '45342')
-    `curl -u "justin@justinrich.com:CeeccicZadyat4I" \
-          "http://api.openweathermap.org/data/2.5/forecast?zip=#{_zip}&APPID=40ab86b4909f9e4e7519e4d5aecc65d0"`
-  end
-  
-  def k2c(degrees)
-    degrees.to_f - 273.15
-  end
-  
-  
-  def c2f(degrees)
-    (degrees.to_f * 9.0 / 5 + 32).round(3)
+  def set_forecasts
+    forecasts_json = JSON.parse(download_forecasts)
+        
+    _days_and_evenings = forecasts_json['forecast']['txt_forecast']['forecastday'].inject([]) do |memo, forecastday|
+      memo << {                           
+          period:     forecastday['title'],               
+          icon:       forecastday['icon'],
+          forecast:   forecastday['fcttext'],
+          pop:        forecastday['pop']
+      }    
+    end
+        
+    _forecasts_by_day = forecasts_json['forecast']['simpleforecast']['forecastday'].inject([]) do |memo, forecastday|
+      memo << {
+          epoch:      forecastday['date']['epoch'],
+          time:       forecastday['date']['hour'],
+          weekday:    forecastday['date']['weekday_short'],
+          month:      forecastday['date']['monthname_short'],
+          tz:         forecastday['date']['tz_short'],
+          icon:       forecastday['icon'],
+          high:       forecastday['high']['fahrenheit'],
+          low:        forecastday['low']['fahrenheit'],
+          conditions: forecastday['conditions']
+      }
+    end
+    
+    @forecasts = {
+        days_and_evenings: _days_and_evenings,
+        forecasts_by_day:  _forecasts_by_day
+    }
+    
+    @forecasts_set_at = Time.now.utc   
   end
   
 end

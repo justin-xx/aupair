@@ -22,6 +22,10 @@ class Thermostat
     nest_api.temperature
   end
   
+  def target_temperature=(_temp)
+    nest_api.temperature=_temp
+  end
+  
   def public_ip
     nest_api.public_ip
   end
