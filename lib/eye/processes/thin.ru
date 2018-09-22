@@ -4,6 +4,10 @@ map '/' do
   run MainController
 end
 
+map '/location' do
+  run LocationController
+end
+
 map '/weather' do
   run WeatherController
 end
