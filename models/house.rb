@@ -128,6 +128,12 @@ class House
       light.set_off
     end
   end
+  
+  def set_lights_brightness(percentage)
+    self.lights.each do |light|
+      light.set_brightness(percentage)
+    end
+  end
 
   def to_json
     {

@@ -11,7 +11,7 @@ class HouseController < Aupair::Base
   
   post '/' do
     @house = House.instance
-      
+
     case params['action']
     when 'goodmorning'
       @house.goodmorning
@@ -29,6 +29,8 @@ class HouseController < Aupair::Base
       @house.set_office_gaming
     when 'tv'
       @house.set_living_room_tv
+    when 'brightness'
+      @house.set_lights_brightness(params['percentage'])
     else
       @house.set_lights_to_recipe(params['action'])
     end

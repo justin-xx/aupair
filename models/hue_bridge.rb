@@ -142,6 +142,11 @@ module Hue
     def bloom?
       /Bloom/.match(self.name) || /Color light/.match(self.type)
     end
+    
+    def set_brightness(percentage = 50)
+      percentage = 50 unless percentage.to_f <= 100 && percentage.to_f >= 0
+      self.set_state({:brightness => ((percentage.to_f/100.0)*255).to_i})
+    end
   end
   
   class Group
