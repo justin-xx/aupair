@@ -23,7 +23,7 @@ class Justin
     
     # If there is a change in at-home or away status after the new coordinates
     if previously != _away
-      _away ? House.set_away : House.set_home
+      _away ? House.instance.set_away : House.instance.set_home
     end
   end
   
