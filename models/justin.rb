@@ -28,7 +28,7 @@ class Justin
   end
   
   def away?
-    @home.distance_to(@location) >= 0.5
+    @home.distance_to(@location) >= 0.003
   end
   
   def to_json
