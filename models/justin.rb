@@ -44,7 +44,7 @@ class Justin
   def to_json
     {
       location: [@location.lat, @location.lng],
-      away: self.away?
+      away: self.away
     }.to_json
   end
   
