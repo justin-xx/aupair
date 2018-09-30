@@ -34,7 +34,7 @@ class Justin
   end
   
   def is_away
-    distance_from_home >= 0.006
+    distance_from_home >= 0.01
   end
   
   def distance_from_home
