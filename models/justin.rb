@@ -15,20 +15,30 @@ class Justin
   def update_location(_lat,_lng)
     puts "Updating Location\n#{_lat},#{_lng}"
     
-    previously = away?
+    previously = away
     
     @location = Geokit::LatLng.new(_lat,_lng)    
-  
-    _away = away?
+    
+    # Set @away to nil, so next time instance function away is called, the
+    # distance from home will be re-calculated and cached
+    @away = nil
     
     # If there is a change in at-home or away status after the new coordinates
-    if previously != _away
-      _away ? House.instance.set_away : House.instance.set_home
+    if previously != away
+      away ? House.instance.set_away : House.instance.set_home
     end
   end
   
-  def away?
-    @home.distance_to(@location) >= 0.003
+  def away
+    @away ||= is_away
+  end
+  
+  def is_away
+    distance_from_home >= 0.006
+  end
+  
+  def distance_from_home
+    @home.distance_to(@location)
   end
   
   def to_json
