@@ -8,8 +8,8 @@ class Justin
   attr_reader :home, :location, :lat, :lng
   
   def initialize
-    @home = Geokit::LatLng.new(39.606932,-84.219543)
-    @location = Geokit::LatLng.new(39.606932,-84.219543)
+    @home = Geokit::LatLng.new(39.606971391513575, -84.2195247487018)
+    @location = Geokit::LatLng.new(39.606971391513575, -84.2195247487018)
   end
 
   def update_location(_lat,_lng)
