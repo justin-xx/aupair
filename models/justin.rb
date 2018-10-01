@@ -12,9 +12,9 @@ class Justin
     @location = Geokit::LatLng.new(39.606971391513575, -84.2195247487018)
   end
 
-  def update_location(_lat,_lng)
+  def update_location(_lat,_lng)    
+    puts Time.now
     puts "Updating Location\n#{_lat},#{_lng}"
-    
     previously = away
     
     @location = Geokit::LatLng.new(_lat,_lng)    
@@ -27,6 +27,7 @@ class Justin
     if previously != away
       away ? set_away : set_at_home
     end
+    puts
   end
   
   def away
@@ -42,10 +43,12 @@ class Justin
   end
   
   def set_at_home
+    puts "got home"
     House.instance.set_home
   end
   
   def set_away
+    puts "went away"
     House.instance.set_away
   end
   

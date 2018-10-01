@@ -11,7 +11,7 @@ class House
   
   attr_reader :lights
   
-  attr_reader :motion_sensor
+  attr_reader :motion_sensors
   
   attr_reader :motion
   

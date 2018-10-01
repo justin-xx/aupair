@@ -34,7 +34,7 @@ namespace :deploy do
   
   task :setup_config do
     on roles(:web) do
-      config = '{"features": {"weather": "true","nest": "true"},"weather": {"api": "eff657faed2487df","zip": "45342"},"hue": {"account":"justinrich"},"nest": {"email": "nest@justinrich.com","password": ".Trseoms1972"},"server": {"ip": "192.168.0.58","port": "8080","aupair-path": "/home/pi/Documents/aupair/current"}}'
+      config = '{"features": {"weather": "true","nest": "true"},"weather": {"api": "eff657faed2487df","zip": "45342"},"hue": {"account":"LiE6iDTdrB8mtz-Ixi1Wvy6bJaS4CI4YLXbBCChw"},"nest": {"email": "nest@justinrich.com","password": ".Trseoms1972"},"server": {"ip": "192.168.0.58","port": "8080","aupair-path": "/home/pi/Documents/aupair/current"}}'
       execute "touch #{shared_path}/config.json"
       execute "echo '#{config}' > #{shared_path}/config.json"
     end
