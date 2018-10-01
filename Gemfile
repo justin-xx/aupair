@@ -7,7 +7,7 @@ gem 'sinatra'
 
 gem 'capistrano'
 
-gem 'hue'
+gem 'hue', :github => 'justin-xx/hue'
 gem 'json'
 
 gem 'nest_thermostat', :github => 'justin-xx/nest_thermostat'

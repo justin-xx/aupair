@@ -19,11 +19,16 @@ class HueBridge
     @lights ||= self.client.lights
   end
   
+  def motion_sensors
+    self.client.motion_sensors
+  end
+  
   def to_json
     {
       address: @address,
       lights: self.lights.collect {|light| light.hue_attributes},
-      groups: self.groups.collect {|room| room.hue_attributes}
+      groups: self.groups.collect {|room| room.hue_attributes},
+      motion_sensors: self.motion_sensors.collect {|sensor| sensor.hue_attributes}
     }.to_json
   end
 
@@ -146,6 +151,18 @@ module Hue
     def set_brightness(percentage = 50)
       percentage = 50 unless percentage.to_f <= 100 && percentage.to_f >= 0
       self.set_state({:brightness => ((percentage.to_f/100.0)*255).to_i})
+    end
+  end
+  
+  class MotionSensor
+    def hue_attributes
+      {
+        identifier:        self.id,
+        name:              self.name,
+        hue_device_type:   self.hue_device_type,
+        updated_at:        self.updated_at,
+        presence:          self.presence,
+      }
     end
   end
   

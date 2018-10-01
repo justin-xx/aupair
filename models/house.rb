@@ -11,6 +11,10 @@ class House
   
   attr_reader :lights
   
+  attr_reader :motion_sensor
+  
+  attr_reader :motion
+  
   attr_reader :away
   
   attr_reader :travel
@@ -19,6 +23,7 @@ class House
     @bridge = HueBridge.instance
     @rooms = @bridge.groups
     @lights = @bridge.lights
+    @motion_sensors = @bridge.motion_sensors
     @away = false
   end
   
@@ -60,6 +65,20 @@ class House
     @travel = true
     
     Television.instance.turn_display_off
+  end
+  
+  # There is about a 12s timeout for the motion sensor to set presence to true, then go back to not  
+  def detect_motion
+    @bridge.motion_sensors.each do |sensor| 
+      if sensor.name != 'HomeAway' && sensor.presence
+        return true
+      end
+    end
+    false
+  end
+  
+  def lights_off?
+    @bridge.client.groups.detect {|group| group.any_on} ? true : false
   end
   
   def set_office_gaming
@@ -138,7 +157,8 @@ class House
   def to_json
     {
       lights: self.lights.collect {|light| light.hue_attributes},
-      rooms: self.rooms.collect {|room| room.hue_attributes}
+      rooms: self.rooms.collect {|room| room.hue_attributes},
+      motion_sensors: self.motion_sensors.collect {|sensor| sensor.hue_attributes}
     }.to_json
   end
   
