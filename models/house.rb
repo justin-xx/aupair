@@ -158,7 +158,6 @@ class House
     {
       lights: self.lights.collect {|light| light.hue_attributes},
       rooms: self.rooms.collect {|room| room.hue_attributes},
-      motion_sensors: self.motion_sensors.collect {|sensor| sensor.hue_attributes}
     }.to_json
   end
   
