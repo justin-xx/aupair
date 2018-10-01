@@ -25,7 +25,7 @@ class Justin
     
     # If there is a change in at-home or away status after the new coordinates
     if previously != away
-      away ? House.instance.set_away : House.instance.set_home
+      away ? set_away : set_at_home
     end
   end
   
@@ -34,11 +34,19 @@ class Justin
   end
   
   def is_away
-    distance_from_home >= 0.01
+    distance_from_home >= 0.03
   end
   
   def distance_from_home
     @home.distance_to(@location)
+  end
+  
+  def set_at_home
+    House.instance.set_home
+  end
+  
+  def set_away
+    House.instance.set_away
   end
   
   def to_json
