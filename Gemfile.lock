@@ -1,6 +1,16 @@
 GIT
+  remote: https://github.com/justin-xx/hue
+  revision: 442893a985171d1d7d9a28cfede934579e6ad0cc
+  specs:
+    hue (0.1.6)
+      curb
+      json
+      log_switch (= 0.4.0)
+      thor
+
+GIT
   remote: https://github.com/justin-xx/nest_thermostat
-  revision: 9a333517bb16346fd5abe654d9b979cdca0d4608
+  revision: 9a0f0c49efe17b6efde63ebb39e61db30cb31d6d
   specs:
     nest_thermostat (0.0.5)
       httparty
@@ -10,7 +20,7 @@ GEM
   specs:
     airbrussh (1.3.0)
       sshkit (>= 1.6.1, != 1.7.0)
-    capistrano (3.10.1)
+    capistrano (3.11.0)
       airbrussh (>= 1.0.0)
       i18n
       rake (>= 10.0.0)
@@ -37,9 +47,9 @@ GEM
     celluloid-supervision (0.20.6)
       timers (>= 4.1.1)
     concurrent-ruby (1.0.5)
-    curb (0.9.4)
+    curb (0.9.6)
     daemons (1.2.6)
-    eventmachine (1.2.5)
+    eventmachine (1.2.7)
     eye (0.10.0)
       celluloid (~> 0.17.3)
       celluloid-io (~> 0.17.0)
@@ -47,35 +57,30 @@ GEM
       state_machines
       thor
     geokit (1.13.1)
-    hitimes (1.2.6)
-    httparty (0.16.1)
+    hitimes (1.3.0)
+    httparty (0.16.2)
       multi_xml (>= 0.5.2)
-    hue (0.2.0)
-      curb
-      json
-      log_switch (= 0.4.0)
-      thor
-    i18n (1.0.0)
+    i18n (1.1.0)
       concurrent-ruby (~> 1.0)
     json (2.1.0)
-    kostya-sigar (2.0.0)
+    kostya-sigar (2.0.4)
     log_switch (0.4.0)
     multi_xml (0.6.0)
-    mustermann (1.0.2)
+    mustermann (1.0.3)
     net-scp (1.2.1)
       net-ssh (>= 2.6.5)
-    net-ssh (4.2.0)
-    nio4r (2.3.0)
-    rack (2.0.4)
-    rack-protection (2.0.1)
+    net-ssh (5.0.2)
+    nio4r (2.3.1)
+    rack (2.0.5)
+    rack-protection (2.0.4)
       rack
     rake (12.3.1)
-    sinatra (2.0.1)
+    sinatra (2.0.4)
       mustermann (~> 1.0)
       rack (~> 2.0)
-      rack-protection (= 2.0.1)
+      rack-protection (= 2.0.4)
       tilt (~> 2.0)
-    sshkit (1.16.0)
+    sshkit (1.17.0)
       net-scp (>= 1.1.2)
       net-ssh (>= 2.8.0)
     state_machines (0.5.0)
@@ -95,7 +100,7 @@ DEPENDENCIES
   capistrano
   eye
   geokit
-  hue
+  hue!
   json
   nest_thermostat!
   sinatra
