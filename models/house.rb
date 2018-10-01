@@ -78,7 +78,7 @@ class House
   end
   
   def lights_off?
-    @bridge.client.groups.detect {|group| group.any_on} ? true : false
+    @bridge.client.groups.detect {|group| group.any_on} ? false : true
   end
   
   def set_office_gaming
@@ -157,7 +157,7 @@ class House
   def to_json
     {
       lights: self.lights.collect {|light| light.hue_attributes},
-      rooms: self.rooms.collect {|room| room.hue_attributes},
+      rooms: self.rooms.collect {|room| room.hue_attributes}
     }.to_json
   end
   

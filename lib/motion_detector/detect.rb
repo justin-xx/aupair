@@ -3,7 +3,7 @@ require '../../init.rb'
 house = House.instance
 
 # If motion is detected and all of the lights in the house are off    
-if house.detect_motion #&& house.lights_off?
+if house.detect_motion && house.lights_off?
   puts "Motion detected and lights are off"
   
   hour = Time.now.hour
