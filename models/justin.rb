@@ -7,7 +7,7 @@ class Justin
   
   attr_reader :home, :location, :lat, :lng, :away
   
-  def initialize
+  def initialize    
     update_location(home_lat, home_lng)
   end
 
@@ -50,6 +50,10 @@ class Justin
     -84.2195247487018
   end
   
+  def away
+    @away || (@away = calc_outside_geofence)
+  end
+  
   def away=(_status)
     @away = _status
     
@@ -68,7 +72,7 @@ class Justin
   def to_json
     {
       location: [@location.lat, @location.lng],
-      away: self.away
+      away:      @away
     }.to_json
   end
   
