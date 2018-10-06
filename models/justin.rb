@@ -5,51 +5,64 @@ class Justin
   
   include Singleton
   
-  attr_reader :home, :location, :lat, :lng
+  attr_reader :home, :location, :lat, :lng, :away
   
   def initialize
-    @home = Geokit::LatLng.new(39.606971391513575, -84.2195247487018)
-    @location = Geokit::LatLng.new(39.606971391513575, -84.2195247487018)
+    update_location(home_lat, home_lng)
   end
 
   def update_location(_lat,_lng)    
     puts Time.now
     puts "Updating Location\n#{_lat},#{_lng}"
-    previously = away
     
     @location = Geokit::LatLng.new(_lat,_lng)    
     
-    # Set @away to nil, so next time instance function away is called, the
+    previously = outside_geofence
+    
+    # Set @outside_geofence to nil, so next time instance function outside_geofence is called, the
     # distance from home will be re-calculated and cached
-    @away = nil
+    @outside_geofence = nil
     
     # If there is a change in at-home or away status after the new coordinates
-    if previously != away
-      away ? set_away : set_at_home
+    if previously != outside_geofence
+      self.away=(away)
     end
     puts
   end
   
-  def away
-    @away ||= is_away
+  def outside_geofence
+    @outside_geofence ||= calc_outside_geofence
   end
   
-  def is_away
-    distance_from_home >= 0.03
+  def calc_outside_geofence
+    home.distance_to(@location) >= 0.5
   end
   
-  def distance_from_home
-    @home.distance_to(@location)
+  def home
+    @home ||= Geokit::LatLng.new(home_lat, home_lng)
   end
   
-  def set_at_home
-    puts "got home"
-    House.instance.set_home
+  def home_lat
+    39.606971391513575
   end
   
-  def set_away
-    puts "went away"
-    House.instance.set_away
+  def home_lng
+    -84.2195247487018
+  end
+  
+  def away=(_status)
+    @away = _status
+    
+    if @away
+      puts "went away"      
+      House.instance.set_away
+      Thermostat.instance.away=true
+    else      
+      puts "got home"      
+      House.instance.set_home
+      Thermostat.instance.away=false
+    end
+    self
   end
   
   def to_json
