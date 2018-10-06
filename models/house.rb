@@ -24,6 +24,7 @@ class House
     @rooms = @bridge.groups
     @lights = @bridge.lights
     @motion_sensors = @bridge.motion_sensors
+    @thermostat = Thermostat.instance
     @away = false
   end
   

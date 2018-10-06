@@ -25,7 +25,7 @@ class Justin
     
     # If there is a change in at-home or away status after the new coordinates
     if previously != outside_geofence
-      self.away=(away)
+      self.away=outside_geofence
     end
     puts
   end
