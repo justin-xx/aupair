@@ -6,8 +6,14 @@ class Thermostat
   
   attr_reader :nest_api, :device_id, :structure_id, :user_id
   
+  attr_accessor :previous_temperature
+  
   def initialize
     load_api_connection!
+  end
+  
+  def id
+    "09AA01AC36160LA1"
   end
   
   def status
@@ -39,13 +45,36 @@ class Thermostat
   end
   
   def away
-    nest_api.away
+    @away
   end
   
-  def away=(_status=true)
-    nest_api.away=_status
-    nest_api.refresh_status
+  def away_temperature
+    case nest_api.status["device"][id]["current_schedule_mode"]
+    when "COOL"
+      85
+    when "HEAT"
+      50
+    end
   end
+    
+  def away=(_status=true)
+    @away = _status
+    
+    if @away
+      @previous_temperature = target_temperature
+      self.target_temperature = away_temperature
+    else
+      self.target_temperature = @previous_temperature
+    end
+    
+    @away
+  end
+  
+  def hvac_mode
+    nest_api.status["device"]["09AA01AC36160LA1"]["current_schedule_mode"]
+  end
+  
+  # status["device"]["09AA01AC36160LA1"]["fan_mode"]
   
   def hue_attributes    
     {
