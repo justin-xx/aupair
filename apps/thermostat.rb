@@ -11,7 +11,7 @@ class ThermostatController < Aupair::Base
   
   post '/' do
     @thermostat = Thermostat.instance
-    @thermostat.target_temperature=params[:temp].to_i
+    @thermostat.target_temperature=params[:target_temperature].to_i
     @thermostat.to_json
   end
 
