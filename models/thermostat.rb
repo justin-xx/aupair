@@ -30,6 +30,8 @@ class Thermostat
   
   def target_temperature=(_temp)
     nest_api.temperature=_temp
+    load_api_connection!
+    _temp
   end
   
   def public_ip
@@ -66,7 +68,7 @@ class Thermostat
     else
       self.target_temperature = @previous_temperature
     end
-    
+    load_api_connection!
     @away
   end
   
