@@ -24,7 +24,11 @@ class House
     @rooms = @bridge.groups
     @lights = @bridge.lights
     @motion_sensors = @bridge.motion_sensors
+    
     @thermostat = Thermostat.instance
+    @television = Television.instance
+    @location = Geokit::LatLng.new(39.606971391513575,-84.2195247487018)
+    
     @away = false
   end
   
@@ -40,16 +44,15 @@ class House
     @home = true
     @travel = false
     
-    Television.instance.turn_display_off
+    @television.turn_display_off
     self.set_lights_to_off
   end
   
   def set_away
-    @away = true
-    @travel = false
+    set_lights_to_off
     
-    self.set_lights_to_off
-    Television.instance.turn_display_off
+    @thermostat.away=true
+    @television.turn_display('off')
   end
   
   def set_home
@@ -57,15 +60,19 @@ class House
     @travel = false
     
     set_lights_to_recipe('bright')
-    Television.instance.set_source
     set_office_gaming
+     
+    @thermostat.away=false    
+    @television.set_source
   end
    
   def set_travel
     @away = true
     @travel = true
     
-    Television.instance.turn_display_off
+    # TODO: Turn off water heater
+    @thermostat.away=true
+    @television.turn_display_off
   end
   
   # There is about a 12s timeout for the motion sensor to set presence to true, then go back to not  

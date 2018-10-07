@@ -5,10 +5,11 @@ class Justin
   
   include Singleton
   
-  attr_reader :home, :location, :lat, :lng, :away
+  attr_reader :house, :location, :lat, :lng, :away
   
-  def initialize    
-    update_location(home_lat, home_lng)
+  def initialize
+    @house = House.instance
+    update_location(@house.location.lat, @house.location.lng)
   end
 
   def update_location(_lat,_lng)    
@@ -35,19 +36,7 @@ class Justin
   end
   
   def calc_outside_geofence
-    home.distance_to(@location) >= 0.5
-  end
-  
-  def home
-    @home ||= Geokit::LatLng.new(home_lat, home_lng)
-  end
-  
-  def home_lat
-    39.606971391513575
-  end
-  
-  def home_lng
-    -84.2195247487018
+    @location.distance_to(@house.location) >= 0.5
   end
   
   def away
@@ -59,11 +48,11 @@ class Justin
     
     if @away
       puts "went away"      
-      House.instance.set_away
+      @house.set_away
       Thermostat.instance.away=true
     else      
       puts "got home"      
-      House.instance.set_home
+      @house.set_home
       Thermostat.instance.away=false
     end
     self

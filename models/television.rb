@@ -25,14 +25,15 @@ class Television
     @active_source = nil
   end
 
-  def turn_display_on
-    cec_command('on')
-    @status = 'on'
-  end
-
-  def turn_display_off
-    cec_command('off')
-    @status = 'off'
+  def turn_display(status = 'off')
+    case status
+    when 'off'
+      cec_command('off')
+      @status = 'off'
+    when 'on'
+      cec_command('on')
+      @status = 'on'
+    end
   end
 
   def set_source(src='HDMI 1')
