@@ -19,6 +19,8 @@ class House
   
   attr_reader :travel
   
+  attr_reader :location
+  
   def initialize
     @bridge = HueBridge.instance
     @rooms = @bridge.groups

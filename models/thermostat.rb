@@ -12,7 +12,7 @@ class Thermostat
     load_api_connection!
   end
   
-  def id
+  def nest_id
     "09AA01AC36160LA1"
   end
   
@@ -73,7 +73,7 @@ class Thermostat
   end
   
   def hvac_mode
-    nest_api.status["device"]["09AA01AC36160LA1"]["current_schedule_mode"]
+    nest_api.status["device"][nest_id]["current_schedule_mode"]
   end
   
   # status["device"]["09AA01AC36160LA1"]["fan_mode"]
@@ -82,12 +82,10 @@ class Thermostat
     {
       current_temperature: current_temperature,
       target_temperature: target_temperature,
+      hvac_mode: hvac_mode,
       public_ip: public_ip,
       leaf: leaf,
       humidity: humidity,
-      user_id: user_id,
-      structure_id: structure_id,
-      device_id: device_id,
       away: away
     }
   end
