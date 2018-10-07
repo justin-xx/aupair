@@ -5,7 +5,7 @@ class Justin
   
   include Singleton
   
-  attr_reader :house, :location, :lat, :lng, :away
+  attr_reader :house, :location, :lat, :lng
   
   def initialize
     @house = House.instance
@@ -40,7 +40,7 @@ class Justin
   end
   
   def away
-    @away || (@away = calc_outside_geofence)
+    @away ||= calc_outside_geofence
   end
   
   def away=(_status)
@@ -53,7 +53,6 @@ class Justin
     else      
       puts "got home"      
       @house.set_home
-      Thermostat.instance.away=false
     end
     self
   end
