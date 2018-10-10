@@ -14,24 +14,21 @@ class House
   attr_reader :motion_sensors
   
   attr_reader :motion
-  
-  attr_reader :away
-  
+    
   attr_reader :travel
   
   attr_reader :location
   
   def initialize
-    @bridge = HueBridge.instance
-    @rooms = @bridge.groups
-    @lights = @bridge.lights
+    @bridge         = HueBridge.instance
+    @rooms          = @bridge.groups
+    @lights         = @bridge.lights
     @motion_sensors = @bridge.motion_sensors
     
     @thermostat = Thermostat.instance
     @television = Television.instance
-    @location = Geokit::LatLng.new(39.606971391513575,-84.2195247487018)
     
-    @away = false
+    @location = Geokit::LatLng.new(39.606971391513575,-84.2195247487018)
   end
   
   def goodmorning

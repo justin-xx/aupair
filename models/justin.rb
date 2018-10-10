@@ -49,7 +49,6 @@ class Justin
     if @away
       puts "went away"      
       @house.set_away
-      Thermostat.instance.away=true
     else      
       puts "got home"      
       @house.set_home
@@ -60,6 +59,7 @@ class Justin
   def to_json
     {
       location: [@location.lat, @location.lng],
+      outside:   @outside_geofence,
       away:      @away
     }.to_json
   end
