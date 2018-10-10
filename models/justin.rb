@@ -13,8 +13,7 @@ class Justin
   end
 
   def update_location(_lat,_lng)    
-    puts Time.now
-    puts "Updating Location\n#{_lat},#{_lng}"
+    `echo #{Time.now.to_i}--#{_lat},#{_lng} >> /home/pi/Documents/aupair/shared/locations.txt`
     
     @location = Geokit::LatLng.new(_lat,_lng)    
     
