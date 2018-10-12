@@ -9,10 +9,11 @@ class Justin
   attr_reader :house, :location, :locations
   
   def initialize
-    @db = Mongo::Client.new(
-      [ "#{AUPAIR_CONFIG["mongodb"]["ip"]}:#{AUPAIR_CONFIG["mongodb"]["port"]}" ], 
-      :database => AUPAIR_CONFIG["mongodb"]["database"] 
-    )
+    @db = Mongo::Connections.new(
+      AUPAIR_CONFIG["mongodb"]["ip"], 
+      AUPAIR_CONFIG["mongodb"]["port"]
+    ).db(AUPAIR_CONFIG["mongodb"]["database"])
+    
     @db_locations = @db[:locations]
     
     @house = House.instance

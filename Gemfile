@@ -15,4 +15,4 @@ gem 'eye'
 
 gem 'geokit'
 
-gem 'mongo'
+gem 'mongo', '1.12.5'
