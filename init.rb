@@ -1,5 +1,5 @@
 %w{
-  sinatra sinatra/base singleton json nest_thermostat hue eye geokit
+  sinatra sinatra/base singleton json nest_thermostat hue eye geokit mongo
 }.each {|gem| require gem }
 
 
