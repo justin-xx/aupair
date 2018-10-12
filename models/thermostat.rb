@@ -51,7 +51,7 @@ class Thermostat
   end
   
   def away_temperature
-    case nest_api.status["device"][id]["current_schedule_mode"]
+    case nest_api.status["device"][nest_id]["current_schedule_mode"]
     when "COOL"
       85
     when "HEAT"
