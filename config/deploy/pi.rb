@@ -1,8 +1,11 @@
 server "pi", user: "pi", roles: %w{web}
 role :web, %w{pi@pi}
+role :db, %w{pi@pi}
 
 server "pi-test", user: "pi", roles: %w{web, test}
 role :web, %w{pi@pi-test}
+
+
 
 set :ssh_options, {
  keys: %w(/home/justin/.ssh/id_rsa),
@@ -34,17 +37,22 @@ namespace :deploy do
   
   task :setup_config do
     on roles(:web) do
-      config = '{"features": {"weather": "true","nest": "true"},"weather": {"api": "eff657faed2487df","zip": "45342"},"hue": {"account":"LiE6iDTdrB8mtz-Ixi1Wvy6bJaS4CI4YLXbBCChw"},"nest": {"email": "nest@justinrich.com","password": ".Trseoms1972"},"server": {"ip": "192.168.0.58","port": "8080","aupair-path": "/home/pi/Documents/aupair/current"}}'
+      config = '{"features": {"weather": "true","nest": "true"},"weather": {"api": "eff657faed2487df","zip": "45342"},"hue": {"account":"LiE6iDTdrB8mtz-Ixi1Wvy6bJaS4CI4YLXbBCChw"},"nest": {"email": "nest@justinrich.com","password": ".Trseoms1972"},"mongodb": {"ip": "127.0.0.1","port":"27017","database": "aupair"},"google": {"maps": "AIzaSyCme2Y4zAOKbNfsESmta6B1niRKxBMLGMk"},"server": {"ip": "192.168.0.58","port": "8080","aupair-path": "/home/pi/Documents/aupair/current"}}'
       execute "touch #{shared_path}/config.json"
       execute "echo '#{config}' > #{shared_path}/config.json"
     end
   end
   
-  desc "Install the build-essential apt package"
+  desc "Install the build-essential apt packages"
   task :install_build_essentials do
     on roles(:web) do
       sudo "apt-get update"
       sudo "apt-get install -y build-essential ruby-dev libcurl4-openssl-dev libcairo2-dev"
+    end
+    
+    on roles(:db) do
+      sudo "apt-get update"
+      sudo "apt-get install -y mongodb"
     end
   end
   
