@@ -8,5 +8,10 @@ class MainController < Aupair::Base
     content_type :html
     erb :index
   end
+  
+  get '/map' do
+    content_type :html
+    erb :map
+  end
 
 end
