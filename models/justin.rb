@@ -9,7 +9,7 @@ class Justin
   attr_reader :house, :location, :locations
   
   def initialize
-    @db = Mongo::Connections.new(
+    @db = Mongo::Connection.new(
       AUPAIR_CONFIG["mongodb"]["ip"], 
       AUPAIR_CONFIG["mongodb"]["port"]
     ).db(AUPAIR_CONFIG["mongodb"]["database"])
@@ -21,7 +21,7 @@ class Justin
   end
 
   def update_location(_lat,_lng)    
-    @db_locations.insert_one({
+    @db_locations.insert({
       time: Time.now.utc.to_i, 
       lat: _lat, 
       lng: _lng
