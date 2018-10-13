@@ -11,7 +11,15 @@ class MainController < Aupair::Base
   
   get '/map' do
     content_type :html
-    erb :map
+    
+    day = params['day'] ? Time.parse(params['day']) : Time.now
+    puts day
+    @locations = Justin.instance.locations_for_day(day)
+    
+    erb :map, :locals => {
+      :locations => @locations,
+      :api_key => AUPAIR_CONFIG["google"]["maps"]
+    }
   end
 
 end

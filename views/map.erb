@@ -28,12 +28,16 @@
            zoom: 10
         });
                 
-     <% Justin.instance.locations.each do |location| %>
-     new google.maps.Marker({position: {lat: <%= location["lat"] %> , lng: <%= location["lng"] %>}, map: map, title: '<%= location["time"] %>'});
+     <% locations.each do |location| %>
+     new google.maps.Marker({ 
+          position: { lat: <%= location["lat"] %> , lng: <%= location["lng"] %>}, 
+          map: map, 
+          title: '<%= location["time"] %>'
+     });
      <% end %>
       }
     </script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCme2Y4zAOKbNfsESmta6B1niRKxBMLGMk&callback=initMap"
+    <script src="https://maps.googleapis.com/maps/api/js?key=<%= api_key %>&callback=initMap"
     async defer></script>
   </body>
 </html>

@@ -17,6 +17,7 @@ class Justin
     @db_locations = @db[:locations]
     
     @house = House.instance
+    update_location(@house.location.lat, @house.location.lng)
   end
 
   def update_location(_lat,_lng)    
@@ -54,6 +55,15 @@ class Justin
     @locations
   end
   
+  def locations_for_day(time = Time.now)
+    @db_locations.find({
+      "time" => {
+        "$gte" => time.beginning_of_day.to_i, 
+        "$lte" => time.end_of_day.to_i
+      }
+    })    
+  end
+  
   def outside_geofence
     @outside_geofence ||= calc_outside_geofence
   end
@@ -68,11 +78,11 @@ class Justin
   end
   
   def lat
-    location.lat
+    @location.lat
   end
   
   def lng
-    location.lng
+    @location.lng
   end
   
   def away=(_status)
