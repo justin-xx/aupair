@@ -17,19 +17,20 @@ class Justin
     @db_locations = @db[:locations]
     
     @house = House.instance
-    update_location(@house.location.lat, @house.location.lng)
   end
 
   def update_location(_lat,_lng)    
-    @db_locations.insert({
-      time: Time.now.utc.to_i, 
-      lat: _lat, 
-      lng: _lng
-    })
-    
     # If you're not updating the location, don't bother
     return nil if !@location.nil? && @location.lat == _lat && @location.lng == _lng
     
+    if !@location.nil?
+      @db_locations.insert({
+        time: Time.now.utc.to_i, 
+        lat: _lat, 
+        lng: _lng
+      })
+    end
+        
     previously = outside_geofence    
             
     # Create the new location
@@ -43,7 +44,6 @@ class Justin
     if previously.nil? || (previously != outside_geofence)
       self.away=outside_geofence
     end
-    puts
   end
   
   def locations
