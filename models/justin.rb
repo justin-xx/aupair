@@ -10,26 +10,21 @@ class Justin
   attr_reader :house, :location, :locations
   
   def initialize
-    @db_locations = DATABASE[:locations]
-    
+    @db_locations = DATABASE[:locations]    
+    @away = false
     @house = House.instance
-    update_location(@house.location.lat, @house.location.lng)
+    @location = Geokit::LatLng.new(@house.location.lat,@house.location.lng) 
   end
 
-  def update_location(_lat,_lng)    
-    # If you're not updating the location, don't bother
-    return nil if !@location.nil? && @location.lat == _lat && @location.lng == _lng
+  def update_location(_lat,_lng)  
+    @db_locations.insert({
+      time: Time.now.utc.to_i, 
+      lat: _lat, 
+      lng: _lng
+    })
     
-    if !@location.nil?
-      @db_locations.insert({
-        time: Time.now.utc.to_i, 
-        lat: _lat, 
-        lng: _lng
-      })
-    end
-        
-    previously = outside_geofence    
-            
+    @previous_location = @location
+              
     # Create the new location
     @location = Geokit::LatLng.new(_lat,_lng) 
     
@@ -38,7 +33,10 @@ class Justin
     @outside_geofence = nil
         
     # If there is a change in at-home or away status after the new coordinates
-    if previously.nil? || (previously != outside_geofence)
+    distance_from_previous = @location.distance_to(@previous_location)
+    
+    if outside_geofence > 0.5
+      return if !@away && distance_from_previous.abs > 0.05
       self.away=outside_geofence
     end
   end
@@ -65,8 +63,7 @@ class Justin
   end
   
   def calc_outside_geofence
-    return nil if @location.nil?
-     distance_from_home >= 0.5
+    distance_from_home >= 0.3
   end
   
   def distance_from_home
