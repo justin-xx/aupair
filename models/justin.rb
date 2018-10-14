@@ -35,9 +35,11 @@ class Justin
     # If there is a change in at-home or away status after the new coordinates
     distance_from_previous = @location.distance_to(@previous_location)
     
-    if outside_geofence > 0.5
+    if distance_from_home > 0.5
       return if !@away && distance_from_previous.abs > 0.05
-      self.away=outside_geofence
+      self.away=true if !@away
+    else
+      self.away=false if @away
     end
   end
   
