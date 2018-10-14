@@ -51,13 +51,11 @@ class Justin
     @locations
   end
   
-  def locations_for_day(time = Time.now)
-    time = timezone.utc_to_local(time)
-    
+  def locations_for_day(time = Time.now)    
     @db_locations.find({
       "time" => {
-        "$gte" => time.beginning_of_day.to_i, 
-        "$lte" => time.end_of_day.to_i
+        "$gte" => timezone.utc_to_local(time.beginning_of_day).to_i, 
+        "$lte" => timezone.utc_to_local(time.end_of_day).to_i
       }
     })    
   end
