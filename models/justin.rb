@@ -1,6 +1,7 @@
 require 'singleton'
 require 'json'
 require 'mongo'
+require 'tzinfo'
 
 class Justin
   
@@ -9,12 +10,7 @@ class Justin
   attr_reader :house, :location, :locations
   
   def initialize
-    @db = Mongo::Connection.new(
-      AUPAIR_CONFIG["mongodb"]["ip"], 
-      AUPAIR_CONFIG["mongodb"]["port"]
-    ).db(AUPAIR_CONFIG["mongodb"]["database"])
-    
-    @db_locations = @db[:locations]
+    @db_locations = DATABASE[:locations]
     
     @house = House.instance
     update_location(@house.location.lat, @house.location.lng)
@@ -56,6 +52,8 @@ class Justin
   end
   
   def locations_for_day(time = Time.now)
+    time = timezone.utc_to_local(time)
+    
     @db_locations.find({
       "time" => {
         "$gte" => time.beginning_of_day.to_i, 
@@ -70,7 +68,11 @@ class Justin
   
   def calc_outside_geofence
     return nil if @location.nil?
-    @location.distance_to(@house.location) >= 0.5
+     distance_from_home >= 0.5
+  end
+  
+  def distance_from_home
+    @location.distance_to(@house.location)
   end
   
   def away
@@ -85,16 +87,13 @@ class Justin
     @location.lng
   end
   
+  def timezone
+    @timezone ||=  TZInfo::Timezone.get('America/New_York')
+  end
+  
   def away=(_status)
     @away = _status
-    
-    if @away
-      puts "went away"      
-      @house.set_away
-    else      
-      puts "got home"      
-      @house.set_home
-    end
+    @away ? @house.set_away : @house.set_home      
     self
   end
   

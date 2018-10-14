@@ -1,5 +1,5 @@
 %w{
-  sinatra sinatra/base singleton json nest_thermostat hue eye geokit mongo
+  sinatra sinatra/base singleton json nest_thermostat hue eye geokit mongo tzinfo
 }.each {|gem| require gem }
 
 
@@ -11,3 +11,8 @@ AUPAIR_CONFIG = JSON.parse(
     File.join(settings.root, "config/config.json")
   )
 )
+
+DATABASE = Mongo::Connection.new(
+  AUPAIR_CONFIG["mongodb"]["ip"], 
+  AUPAIR_CONFIG["mongodb"]["port"]
+).db(AUPAIR_CONFIG["mongodb"]["database"])
