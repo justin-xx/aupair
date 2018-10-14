@@ -21,11 +21,11 @@ class Thermostat
   end
   
   def current_temperature
-    nest_api.current_temperature
+    nest_api.current_temperature.to_i
   end
   
   def target_temperature
-    nest_api.temperature
+    nest_api.temperature.to_i
   end
   
   def target_temperature=(_temp)
