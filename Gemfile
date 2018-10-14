@@ -16,3 +16,5 @@ gem 'eye'
 gem 'geokit'
 
 gem 'mongo', '1.12.5'
+
+gem 'tzinfo'
