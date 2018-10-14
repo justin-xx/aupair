@@ -21,42 +21,48 @@
   <body>
     <div id="map"></div>
     <script>
-      var map;
+      var map, heatmap, points;
       function initMap() {
         map = new google.maps.Map(document.getElementById('map'), {
-          center: {lat: <%= House.instance.location.lat %>, lng: <%= House.instance.location.lng %>},
-           zoom: 10
+           center: {lat: <%= House.instance.location.lat %>, lng: <%= House.instance.location.lng %>},
+           zoom: 12
         });
         
-        
-        var coordinates = [
-           
-        <% locations.each do |location| %>             
-           {lat: <%= location["lat"] %>, lng: <%= location["lng"] %>},
-        <% end %>
-        ]      
-          
-        <% locations.each do |location| %>
-        // new google.maps.Marker({
-        //      position: { lat: <%= location["lat"] %> , lng: <%= location["lng"] %>},
-        //      map: map,
-        //      title: '<%= location["time"] %>'
-        // });
-        <% end %>
-        
-        var path = new google.maps.Polyline({
-          path: coordinates,
-          geodesic: true,
-          strokeColor: '#FF0000',
-          strokeOpacity: 1.0,
-          strokeWeight: 2
-        });
+        heatmap = new google.maps.visualization.HeatmapLayer({
+           data: getPoints()
+         }); 
+         
+        heatmap.setMap(map);
+        heatmap.set('gradient', ['rgba(0, 255, 255, 0)',
+             'rgba(0, 255, 255, 1)',
+             'rgba(0, 191, 255, 1)',
+             'rgba(0, 127, 255, 1)',
+             'rgba(0, 63, 255, 1)',
+             'rgba(0, 0, 255, 1)',
+             'rgba(0, 0, 223, 1)',
+             'rgba(0, 0, 191, 1)',
+             'rgba(0, 0, 159, 1)',
+             'rgba(0, 0, 127, 1)',
+             'rgba(63, 0, 91, 1)',
+             'rgba(127, 0, 63, 1)',
+             'rgba(191, 0, 31, 1)',
+             'rgba(255, 0, 0, 1)' ]);
 
-        path.setMap(map);
-        
+         heatmap.set('radius', 20);
+         heatmap.set('opacity', 0.5);
+
+       
+         function getPoints() {
+            return [             
+          <% locations.each do |location| %>
+               new google.maps.LatLng(<%= location["lat"] %>, <%= location["lng"] %>),
+          <% end %>        
+            ];
+         }               
       }
+   
     </script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=<%= api_key %>&callback=initMap"
+    <script src="https://maps.googleapis.com/maps/api/js?key=<%= api_key %>&libraries=visualization&callback=initMap"
     async defer></script>
   </body>
 </html>
