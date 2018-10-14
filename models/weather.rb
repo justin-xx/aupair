@@ -10,13 +10,15 @@ class Weather
 
   def initialize
     set_current_conditions
+    set_hourly
     set_forecasts
   end
   
   def attributes
     {
       current_conditions: self.current_conditions,
-      forecasts: self.forecasts      
+      hourly: self.hourly,
+      forecasts: self.forecasts
     }
   end
   
@@ -25,27 +27,50 @@ class Weather
   end
   
   def current_conditions
-    if (Time.now - @current_conditions_set_at) > (60 * 15) # (1m = 60s)
+    if (Time.now.utc - @current_conditions_set_at) > (60 * 15) # (1m = 60s)
       set_current_conditions
     end
     @current_conditions
   end
   
   def forecasts
-    if (Time.now - @forecasts_set_at) > (60 * 120) # (1m = 60s)
+    if (Time.now.utc - @forecasts_set_at) > (60 * 120) # (1m = 60s)
       set_forecasts
     end
     @forecasts
   end
   
-  private
-  
-  def download_current_conditions(_zip = AUPAIR_CONFIG["weather"]["zip"])
-    `curl "http://api.wunderground.com/api/#{ AUPAIR_CONFIG["weather"]["api"]}/conditions/q/OH/#{_zip}.json"`
+  def hourly
+    if (Time.now.utc - @hourly_set_at) > (60 * 120) # (1m = 60s)
+      set_hourly
+    end
+    @hourly
   end
   
-  def download_forecasts(_zip = AUPAIR_CONFIG["weather"]["zip"])
-    `curl "http://api.wunderground.com/api/#{ AUPAIR_CONFIG["weather"]["api"]}/forecast/q/OH/#{_zip}.json"`
+  private
+  
+  def zip
+    AUPAIR_CONFIG["weather"]["zip"]
+  end
+  
+  def state
+    "OH"
+  end
+  
+  def download_json(_endpoint)
+    `curl "http://api.wunderground.com/api/#{ AUPAIR_CONFIG["weather"]["api"]}/#{_endpoint}/q/#{state}/#{zip}.json"`
+  end
+  
+  def download_current_conditions
+    download_json('conditions')
+  end
+  
+  def download_forecasts
+    download_json('forecast')
+  end
+  
+  def download_hourly
+    download_json('hourly')
   end
   
   def set_current_conditions
@@ -96,6 +121,28 @@ class Weather
     }
     
     @forecasts_set_at = Time.now.utc   
+  end
+  
+  def set_hourly
+    hourly_json = JSON.parse(download_hourly)
+          
+    @hourly = hourly_json['hourly_forecast'].inject([]) do |memo, forecasthour|
+      memo << {
+        time:           forecasthour['FCTTIME']['civil'],
+        temp:           forecasthour['temp']['english'],
+        dewpoint:       forecasthour['dewpoint']['english'],
+        conditions:     forecasthour['condition'], 
+        icon:           forecasthour['icon'],
+        icon_url:       forecasthour['icon_url'],
+        wind_speed:     forecasthour['wspd']['english'],
+        wind_direction: forecasthour['wdir']['dir'],
+        humidity:       forecasthour['humidity'],
+        snow:           forecasthour['snow']['english'],
+        pop:            forecasthour['pop']
+      }
+    end
+    
+    @hourly_set_at = Time.now.utc  
   end
   
 end
