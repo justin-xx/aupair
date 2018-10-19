@@ -36,7 +36,7 @@ class Justin
     distance_from_previous = @location.distance_to(@previous_location)
     
     if distance_from_home > 0.5
-      return if !@away && distance_from_previous.abs > 0.05
+      return if !@away && distance_from_previous.abs < 0.05
       self.away=true if !@away
     else
       self.away=false if @away
@@ -54,8 +54,8 @@ class Justin
   def locations_for_day(time = Time.now)    
     @db_locations.find({
       "time" => {
-        "$gte" => timezone.utc_to_local(time.beginning_of_day).to_i, 
-        "$lte" => timezone.utc_to_local(time.end_of_day).to_i
+        "$gte" => timezone.local_to_utc(time.beginning_of_day).to_i, 
+        "$lte" => timezone.local_to_utc(time.end_of_day).to_i
       }
     })    
   end
