@@ -14,9 +14,12 @@
         "email": "",
         "password": ""
     },
-    "server": {
+    "mongodb": {
         "ip": "",
-        "port": "8080",
-        "aupair-path": "/home/pi/Documents/aupair/current"
+        "port": "",
+        "database": ""
+    },
+    "google": {
+        "maps": ""
     }
 }
