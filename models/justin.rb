@@ -17,7 +17,7 @@ class Justin
   end
 
   def update_location(_lat,_lng)  
-    @db_locations.insert({
+    @db_locations.insert_one({
       time: Time.now.utc.to_i, 
       lat: _lat, 
       lng: _lng
