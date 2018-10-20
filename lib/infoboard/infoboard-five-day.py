@@ -73,7 +73,7 @@ writePidFile()
 
 while True:
     try:
-        r = requests.get(url='http://192.168.0.58:8080/weather')
+        r = requests.get(url='http://www.justinrich.com:8080/weather')
     except ConnectionError as e:
         end
 
