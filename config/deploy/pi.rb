@@ -39,7 +39,7 @@ namespace :deploy do
   
   task :setup_config do
     on roles(:web, :television) do
-      config = '{"features": {"weather": "true","nest": "true"},"weather": {"api": "eff657faed2487df","zip": "45342"},"hue": {"account":"LiE6iDTdrB8mtz-Ixi1Wvy6bJaS4CI4YLXbBCChw"},"nest": {"email": "nest@justinrich.com","password": ".Trseoms1972"},"mongodb": {"ip": "192.168.0.85","port":"27017","database": "aupair"},"google": {"maps": "AIzaSyCme2Y4zAOKbNfsESmta6B1niRKxBMLGMk"}}}'
+      config = '{"features": {"weather": "true","nest": "true"},"weather": {"api": "eff657faed2487df","zip": "45342"},"hue": {"account":"LiE6iDTdrB8mtz-Ixi1Wvy6bJaS4CI4YLXbBCChw"},"nest": {"email": "nest@justinrich.com","password": ".Trseoms1972"},"mongodb": {"ip": "192.168.0.85","port":"27017","database": "aupair"},"google": {"maps": "AIzaSyCme2Y4zAOKbNfsESmta6B1niRKxBMLGMk"}}'
       execute "touch #{shared_path}/config.json"
       execute "echo '#{config}' > #{shared_path}/config.json"
     end
