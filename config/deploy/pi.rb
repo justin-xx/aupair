@@ -1,11 +1,8 @@
-server "pi", user: "pi", roles: %w{web}
-role :web, %w{pi@pi}
-role :db, %w{pi@pi}
+server "jar-server", user: "justin", roles: %w{web db}
 
-server "pi-test", user: "pi", roles: %w{web, test}
-role :web, %w{pi@pi-test}
+server "pi", user: "pi", roles: %w{television}
 
-
+server "pi-test", user: "pi", roles: %w{television}
 
 set :ssh_options, {
  keys: %w(/home/justin/.ssh/id_rsa),
@@ -13,31 +10,36 @@ set :ssh_options, {
  auth_methods: %w(publickey)
 }
 
+set :deploy_to, "~/Documents/aupair"
+
 namespace :deploy do
   
   task :stop_aupair do
-    on roles(:web) do
-      execute "[ ! -e /home/pi/Documents/aupair/current ] && eye stop aupair; ls"
+    on roles(:web, :television) do
+      execute "[ ! -e /home/#{:user}/Documents/aupair/current ] && eye stop aupair; ls"
     end
   end
   
   task :checkout_raspidmx do
-    on roles(:web) do
-      execute "[ ! -e /home/pi/Documents/aupair/shared/raspidmx ] && git clone https://github.com/AndrewFromMelbourne/raspidmx.git /home/pi/Documents/aupair/shared/; ls"
+    on roles(:television) do
+      execute "[ ! -e /home/#{:user}/Documents/aupair/shared/raspidmx ] && git clone https://github.com/AndrewFromMelbourne/raspidmx.git /home/#{:user}/Documents/aupair/shared/; ls"
     end
   end
   
   task :install_system_gems do
     on roles(:web) do
-      sudo "gem install thin"
+      sudo "gem install thin"      
+    end
+    
+    on roles(:web, :television) do
       sudo "gem install bundler"
       sudo "gem install eye"
     end    
   end
   
   task :setup_config do
-    on roles(:web) do
-      config = '{"features": {"weather": "true","nest": "true"},"weather": {"api": "eff657faed2487df","zip": "45342"},"hue": {"account":"LiE6iDTdrB8mtz-Ixi1Wvy6bJaS4CI4YLXbBCChw"},"nest": {"email": "nest@justinrich.com","password": ".Trseoms1972"},"mongodb": {"ip": "127.0.0.1","port":"27017","database": "aupair"},"google": {"maps": "AIzaSyCme2Y4zAOKbNfsESmta6B1niRKxBMLGMk"},"server": {"ip": "192.168.0.58","port": "8080","aupair-path": "/home/pi/Documents/aupair/current"}}'
+    on roles(:web, :television) do
+      config = '{"features": {"weather": "true","nest": "true"},"weather": {"api": "eff657faed2487df","zip": "45342"},"hue": {"account":"LiE6iDTdrB8mtz-Ixi1Wvy6bJaS4CI4YLXbBCChw"},"nest": {"email": "nest@justinrich.com","password": ".Trseoms1972"},"mongodb": {"ip": "192.168.0.85","port":"27017","database": "aupair"},"google": {"maps": "AIzaSyCme2Y4zAOKbNfsESmta6B1niRKxBMLGMk"}}}'
       execute "touch #{shared_path}/config.json"
       execute "echo '#{config}' > #{shared_path}/config.json"
     end
@@ -46,6 +48,11 @@ namespace :deploy do
   desc "Install the build-essential apt packages"
   task :install_build_essentials do
     on roles(:web) do
+      sudo "apt-get update"
+      sudo "apt-get install -y build-essential ruby-dev libcurl4-openssl-dev"
+    end
+    
+    on roles(:television) do
       sudo "apt-get update"
       sudo "apt-get install -y build-essential ruby-dev libcurl4-openssl-dev libcairo2-dev"
     end
@@ -63,7 +70,7 @@ namespace :deploy do
   end
   
   task :symlink_raspidmx do
-    on roles(:web) do      
+    on roles(:television) do      
       execute "ln -nfs #{shared_path}/raspidmx #{current_path}/lib/raspidmx"
     end
   end
@@ -75,13 +82,13 @@ namespace :deploy do
   end
   
   task :start_eye do
-    on roles(:web) do      
+    on roles(:web, :television) do      
       execute "eye load #{current_path}/lib/eye/aupair.eye; eye restart aupair"
     end
   end
   
   task :install_pip3_modules do
-    on roles(:web) do
+    on roles(:television) do
       execute "pip3 install pytz"
     end
   end
@@ -92,7 +99,7 @@ namespace :deploy do
   before "deploy:starting", :checkout_raspidmx  
   before "deploy:starting", :install_build_essentials
 
-  after "deploy:updated", :bundle_install
+  after "deploy:updated",         :bundle_install
   after "deploy:symlink:release", :symlink_raspidmx
   after "deploy:symlink:release", :symlink_config
 

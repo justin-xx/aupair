@@ -71,7 +71,7 @@ class House
     
     # TODO: Turn off water heater
     @thermostat.away=true
-    @television.turn_display_off
+    @television.turn_display('off')
   end
   
   # There is about a 12s timeout for the motion sensor to set presence to true, then go back to not  

@@ -12,7 +12,7 @@ AUPAIR_CONFIG = JSON.parse(
   )
 )
 
-DATABASE = Mongo::Connection.new(
-  AUPAIR_CONFIG["mongodb"]["ip"], 
-  AUPAIR_CONFIG["mongodb"]["port"]
-).db(AUPAIR_CONFIG["mongodb"]["database"])
+DATABASE = Mongo::Client.new(
+  [AUPAIR_CONFIG["mongodb"]["ip"] + ":" + AUPAIR_CONFIG["mongodb"]["port"]],
+  :database => AUPAIR_CONFIG["mongodb"]["database"]
+).database

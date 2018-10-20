@@ -15,6 +15,7 @@ gem 'eye'
 
 gem 'geokit'
 
-gem 'mongo', '1.12.5'
+gem 'mongo'
+gem 'bson_ext'
 
 gem 'tzinfo'
