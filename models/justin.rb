@@ -15,8 +15,19 @@ class Justin
     @house = House.instance
     @location = Geokit::LatLng.new(@house.location.lat,@house.location.lng) 
   end
+  
+  # in miles
+  def threshold_distance
+    1.0
+  end
 
-  def update_location(_lat,_lng)  
+  def update_location(_lat,_lng)
+    _location = Geokit::LatLng.new(_lat,_lng) 
+    
+    return if !ignored_locations.detect {|ignored_location|
+      _location.distance_to(ignored_location) <= 0.05
+    }.nil?
+    
     @db_locations.insert_one({
       time: Time.now.utc.to_i, 
       lat: _lat, 
@@ -26,7 +37,7 @@ class Justin
     @previous_location = @location
               
     # Create the new location
-    @location = Geokit::LatLng.new(_lat,_lng) 
+    @location = _location
     
     # Set @outside_geofence to nil, so next time instance function outside_geofence is called, the
     # distance from home will be re-calculated and cached
@@ -35,8 +46,7 @@ class Justin
     # If there is a change in at-home or away status after the new coordinates
     distance_from_previous = @location.distance_to(@previous_location)
     
-    if distance_from_home > 0.5
-      return if !@away && distance_from_previous.abs < 0.05
+    if distance_from_home > threshold_distance
       self.away=true if !@away
     else
       self.away=false if @away
@@ -58,14 +68,14 @@ class Justin
         "$lte" => timezone.local_to_utc(time.end_of_day).to_i
       }
     })    
-  end
+  end  
   
   def outside_geofence
     @outside_geofence ||= calc_outside_geofence
   end
   
   def calc_outside_geofence
-    distance_from_home >= 0.3
+    distance_from_home >= threshold_distance
   end
   
   def distance_from_home
@@ -100,6 +110,13 @@ class Justin
       outside:   outside_geofence,
       away:      away
     }.to_json
+  end
+  
+  private
+  def ignored_locations    
+    @ignored_locations ||= AUPAIR_CONFIG["ignore"].inject([]) do |memo, ignore_location|
+      memo << Geokit::LatLng.new(ignore_location["lat"], ignore_location["lng"])
+    end
   end
   
 end
