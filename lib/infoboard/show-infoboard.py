@@ -13,7 +13,7 @@ def writePidFile():
 def filename(name):
     return "/home/pi/Documents/aupair/current/lib/infoboard/infoboard-{0}.png".format(name)
 
-images_times = [['five-day',20],['current-conditions',20]]
+images_times = [['five-day',20],['hourly',20]]
 
 writePidFile()
 

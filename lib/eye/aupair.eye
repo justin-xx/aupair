@@ -35,6 +35,13 @@ Eye.application 'aupair' do
      stop_signals [:QUIT, 2.seconds, :TERM, 1.seconds, :KILL]
   end
   
+  process :infoboard_hourly do
+     pid_file 'infoboard-hourly.pid'
+     daemonize true     
+     start_command '/usr/bin/python3 /home/pi/Documents/aupair/current/lib/infoboard/infoboard-hourly.py'
+     stop_signals [:QUIT, 2.seconds, :TERM, 1.seconds, :KILL]
+  end
+  
   process :show_infoboard do
      pid_file 'show-infoboard.pid'
      daemonize true     
