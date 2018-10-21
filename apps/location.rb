@@ -11,7 +11,6 @@ class LocationController < Aupair::Base
   
   post '/' do
     @justin = Justin.instance
-    coordinates =  eval("#{params.first.first}")
     @justin.update_location(coordinates[:lat], coordinates[:lng])
     @justin.to_json
   end
