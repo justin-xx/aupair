@@ -12,14 +12,6 @@ map '/weather' do
   run WeatherController
 end
 
-map '/house' do
-  run HouseController
-end
-
-map '/rooms' do
-  run RoomsController
-end
-
 map '/lights' do
   run LightsController
 end

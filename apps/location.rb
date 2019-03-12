@@ -5,14 +5,14 @@ class LocationController < Aupair::Base
   end
   
   get '/' do
-    @justin = Justin.instance
-    @justin.to_json
+    @person = Person.instance
+    @person.to_json
   end
   
   post '/' do
-    @justin = Justin.instance
-    @justin.update_location(coordinates[:lat], coordinates[:lng])
-    @justin.to_json
+    @person = Person.instance
+    @person.update_location(coordinates[:lat], coordinates[:lng])
+    @person.to_json
   end
   
 end

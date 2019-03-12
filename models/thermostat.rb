@@ -13,7 +13,7 @@ class Thermostat
   end
   
   def nest_id
-    "09AA01AC36160LA1"
+    AUPAIR_CONFIG["nest"]["id"]
   end
   
   def status
@@ -98,7 +98,12 @@ class Thermostat
   
   def load_api_connection!
     #'justin@justinrich.com' 'nXvyzqJtD54bEwT'
-    @nest_api = NestThermostat::Nest.new(email: 'nest@justinrich.com', password: '.Trseoms1972', update_every: 900)   
+    @nest_api = NestThermostat::Nest.new(
+      email: AUPAIR_CONFIG["nest"]["email"], 
+      password: AUPAIR_CONFIG["nest"]["password"], 
+      update_every: 900
+    )   
+    
     @user_id = nest_api.user_id
     @structure_id =  self.status['user'][user_id]['structures'][0].split('.')[1]
     @device_id = self.status['structure'][structure_id]['devices'][0].split('.')[1]

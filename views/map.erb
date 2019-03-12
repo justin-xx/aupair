@@ -34,7 +34,7 @@
              
       
          map = new google.maps.Map(document.getElementById('map'), {
-            center: {lat: <%= House.instance.location.lat %>, lng: <%= House.instance.location.lng %>},
+            center: {lat: <%= Person.instance.house_location.lat %>, lng: <%= Person.instance.house_location.lng %>},
             zoom: 12
          });
         

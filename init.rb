@@ -1,5 +1,5 @@
 %w{
-  sinatra sinatra/base singleton json nest_thermostat hue eye geokit mongo tzinfo
+  sinatra sinatra/base singleton json nest_thermostat hue eye geokit mongo mongoid tzinfo
 }.each {|gem| require gem }
 
 
@@ -16,3 +16,5 @@ DATABASE = Mongo::Client.new(
   [AUPAIR_CONFIG["mongodb"]["ip"] + ":" + AUPAIR_CONFIG["mongodb"]["port"]],
   :database => AUPAIR_CONFIG["mongodb"]["database"]
 ).database
+
+Mongoid.load!("config/mongoid.yml", :development)

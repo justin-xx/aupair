@@ -7,3 +7,5 @@ lib/eye/processes/*
 lib/infoboard/*.png
 
 config/config.json
+
+config/mongoid.yml

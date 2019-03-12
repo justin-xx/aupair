@@ -1,184 +1,73 @@
-require 'singleton'
-require 'json'
-
 class HueBridge
 
   include Singleton
-
-  attr_reader :client
+  
+  attr_reader :client,
+              :rooms,
+              :lights,
+              :motion_sensors
   
   def initialize
-    @client = connect_to_bridge
+    @client         = Hue::Client.new(AUPAIR_CONFIG["hue"]["account"])
+    @rooms          = @client.groups
+    @lights         = @client.lights
+    @motion_sensors = @client.motion_sensors    
   end
   
-  def groups
-    @rooms ||= self.client.groups
+  def indoor_rooms
+    @indoors ||= @rooms.reject {|room| room.name == "Outside"}
   end
   
-  def lights
-    @lights ||= self.client.lights
+  def outdoors
+    @outdoors ||= @rooms.detect {|room| room.name == "Outside"}
   end
   
-  def motion_sensors
-    self.client.motion_sensors
+  def lights_off?
+    @rooms.detect {|room| room.any_on} ? false : true
   end
   
-  def to_json
-    {
-      address: @address,
-      lights: self.lights.collect {|light| light.hue_attributes},
-      groups: self.groups.collect {|room| room.hue_attributes},
-      motion_sensors: self.motion_sensors.collect {|sensor| sensor.hue_attributes}
-    }.to_json
+  def set_lights_to_off
+    self.lights.each do |light|
+      light.set_to_off
+    end
+  end
+  
+  def set_outdoor_lights_to_off
+    outdoors.lights.each do |light|
+      light.set_to_off
+    end
+  end
+  
+  def set_lights_to_recipe(recipe = :bright)
+    indoor_rooms.each do |room|
+      room.lights.each do |light|
+        light.set_to(recipe)        
+      end
+    end
+  end
+  
+  def set_outdoor_lights_to_recipe(recipe = :bright)
+    outdoors.lights.each do |light|
+      light.set_to(recipe)
+    end
+  end
+  
+  def set_lights_brightness(percentage)
+    indoor_rooms.each do |room|
+      room.lights.each do |light|
+        light.set_brightness(percentage)
+      end
+    end
+  end
+  
+  # There is about a 12s timeout for the motion sensor to set presence to true, then go back to not  
+  def detect_motion
+    @client.motion_sensors.each do |sensor| 
+      if sensor.name != 'HomeAway' && sensor.presence
+        return true
+      end
+    end
+    false
   end
 
-  private
-
-  def connect_to_bridge
-    Hue::Client.new(AUPAIR_CONFIG["hue"]["account"])
-  end
-
-end
-
-module Hue
-  class Light
-    Bright = {
-      :on => true,
-      :saturation => 254,
-      :brightness => 254, 
-      :color_temperature => 300, 
-      :colormode => "ct"
-    }
-    
-    BloomBright = {
-      :on => true,
-      :sat => 25,
-      :hue => 46920
-    }
-    
-    Brightdim = {
-      :on => true,
-      :saturation => 254,
-      :brightness => 153, 
-      :color_temperature => 300, 
-      :colormode => "ct"
-    }
-    
-    BloomBrightdim = {
-      :on => true,
-      :sat => 25,
-      :hue => 46920,
-      :brightness=>153
-    }
-    
-    Concentrate = {
-      :on => true,
-      :saturation => 254,
-      :brightness => 254, 
-      :color_temperature => 233, 
-      :colormode => "ct"
-    }
-    
-    BloomConcentrate = {
-      :on => true,
-      :sat => 25,
-      :hue => 46920,
-      :brightness=>254
-    }
-    
-    Dim = {
-      :on => true, 
-      :brightness => 62, 
-      :color_temperature => 447, 
-      :colormode => "ct"
-    }
-    
-    BloomDim  = {
-      :on => true,
-      :sat => 25,
-      :hue => 46920,
-      :brightness => 62
-    }
-    
-    Read = {
-      :on => true,
-      :saturation => nil,
-      :brightness => 220, 
-      :color_temperature => 343, 
-      :colormode => "ct"
-    }
-    
-    BloomRead = {
-      :on => true,
-      :sat => 25,
-      :hue => 46920
-    }
-    
-    
-    def hue_attributes
-      {
-        identifier:        self.id,
-        name:              self.name,
-        hue:               self.hue,
-        saturation:        self.saturation,
-        brightness:        self.brightness,
-        x:                 self.x, 
-        y:                 self.y,         
-        color_temperature: self.color_temperature,                 
-        color_mode:        self.color_mode,                         
-        type:              self.type,                                 
-        model:             self.model
-      }
-    end
-    
-    def set_recipe(recipe = 'Bright')
-      recipe_name = !self.bloom? ? recipe.capitalize : 'Bloom' + recipe.capitalize
-      puts recipe_name
-      attrs = Hue::Light.const_get(recipe_name)
-      puts attrs
-      self.set_state(attrs)  
-    end
-    
-    def set_off
-      self.set_state({:on => false})
-    end
-    
-    
-    def bloom?
-      /Bloom/.match(self.name) || /Color light/.match(self.type)
-    end
-    
-    def set_brightness(percentage = 50)
-      percentage = 50 unless percentage.to_f <= 100 && percentage.to_f >= 0
-      self.set_state({:brightness => ((percentage.to_f/100.0)*255).to_i})
-    end
-  end
-  
-  class MotionSensor
-    def hue_attributes
-      {
-        identifier:        self.id,
-        name:              self.name,
-        hue_device_type:   self.hue_device_type,
-        updated_at:        self.updated_at,
-        presence:          self.presence,
-      }
-    end
-  end
-  
-  class Group
-    def hue_attributes
-      {
-        identifier:        self.id,
-        name:              self.name,
-        hue:               self.hue,
-        saturation:        self.saturation,
-        brightness:        self.brightness,
-        x:                 self.x, 
-        y:                 self.y,         
-        color_temperature: self.color_temperature,                 
-        type:              self.type
-      }
-    end
-  end
 end
