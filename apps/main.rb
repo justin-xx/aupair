@@ -14,7 +14,7 @@ class MainController < Aupair::Base
     
     day = params['day'] ? Time.parse(params['day']) : Time.now
     puts day
-    @locations = Justin.instance.locations_for_day(day)
+    @locations = Person.instance.locations_for_day(day)
     
     erb :map, :locals => {
       :locations => @locations,

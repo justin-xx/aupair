@@ -17,5 +17,6 @@ gem 'geokit'
 
 gem 'mongo'
 gem 'bson_ext'
+gem 'mongoid'
 
 gem 'tzinfo'
