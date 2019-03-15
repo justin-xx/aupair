@@ -34,6 +34,10 @@ class Person
     _location.save
   end
   
+  def last_location
+    locations.last
+  end
+  
   def locations_for_day(time = Time.now)    
     locations.find({
       "time" => {
@@ -44,7 +48,7 @@ class Person
   end
 
   def away
-    locations.last.away
+    last_location.away
   end
   
   def awake=(_status)
@@ -56,8 +60,8 @@ class Person
   
   def to_json
     {
-      location: [lat, lng],
-      outside:   outside_geofence,
+      location: [last_location.lat, last_location.lng],
+      outside:   last_location.outside_geofence,
       away:      away
     }.to_json
   end
@@ -81,7 +85,7 @@ class Person
   
   def left_home    
     HueBridge.instance.set_lights_to_off
-    Thermostat.away=true
+    Thermostat.instance.away=true
     # Add resque worker queue job to turn televisions off    
   end
   

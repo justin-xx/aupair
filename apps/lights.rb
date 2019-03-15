@@ -14,4 +14,20 @@ class LightsController < Aupair::Base
     @light.hue_attributes.to_json
   end
   
+  post '/off' do
+    HueBridge.instance.set_lights_to_off
+    HueBridge.instance.set_outdoor_lights_to_off
+    HueBridge.instance.to_json
+  end
+  
+  post '/recipe' do
+    HueBridge.instance.set_lights_to_recipe(params[:name].to_sym)
+    HueBridge.instance.to_json
+  end
+  
+  post '/brightness' do
+    HueBridge.instance.set_lights_brightness(params[:percentage])
+    HueBridge.instance.to_json
+  end
+  
 end

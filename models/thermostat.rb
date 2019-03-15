@@ -46,6 +46,10 @@ class Thermostat
     nest_api.humidity
   end
   
+  def hvac_mode
+    nest_api.hvac_mode
+  end
+  
   def away
     @away
   end
@@ -70,12 +74,8 @@ class Thermostat
     end
     load_api_connection!
     @away
-  end
-  
-  def hvac_mode
-    nest_api.status["device"][nest_id]["current_schedule_mode"]
-  end
-  
+  end  
+
   # status["device"]["09AA01AC36160LA1"]["fan_mode"]
   
   def hue_attributes    

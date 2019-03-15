@@ -67,17 +67,17 @@
             return null;
          });
          
-         function post_tv_function(_action = '', _source = '') {
-            $.post( "/tv", { action: _action, source: _source }, function (data) {
-               $("#television").html("<p id=\"television\">" + JSON.stringify(data) + "</p>");
-            });
-         };
-         
-         function post_house_function(_action = '') {
-            $.post( "/house", { action: _action}, function (data) {
-               $("#house").html("<p id=\"house\">" + JSON.stringify(data) + "</p>");
-            });
-         }                   
+         // function post_tv_function(_action = '', _source = '') {
+         //    $.post( "/tv", { action: _action, source: _source }, function (data) {
+         //       $("#television").html("<p id=\"television\">" + JSON.stringify(data) + "</p>");
+         //    });
+         // };
+         //
+         // function post_house_function(_action = '') {
+         //    $.post( "/house", { action: _action}, function (data) {
+         //       $("#house").html("<p id=\"house\">" + JSON.stringify(data) + "</p>");
+         //    });
+         // }            
          
          function loadThermostatStatus() {
             $.getJSON( "/thermostat", function (data){
@@ -91,60 +91,60 @@
             });                     
          }     
          
-         function loadWeatherStatus() {
-            $.getJSON( "/weather", function (data){                
-               $("#weather-status").html("<p id=\"weather-status\">" + 
-                  JSON.stringify(data["current_conditions"]["temperature"]) + "</p>");
-            });                     
-         }     
+         // function loadWeatherStatus() {
+         //    $.getJSON( "/weather", function (data){
+         //       $("#weather-status").html("<p id=\"weather-status\">" +
+         //          JSON.stringify(data["current_conditions"]["temperature"]) + "</p>");
+         //    });
+         // }
          
-         
-         $( document ).ready(function(){
-            loadThermostatStatus();
-            loadWeatherStatus();
-            
-            $("#lights_on").click(function(){
-               post_house_function("bright");               
-               return null;            
-            });
-         
-            $("#lights_off").click(function(){
-               post_house_function("off");               
-               return null;
-            });
-         
-            $("#lights_on_read").click(function(){            
-               post_house_function("read");      
-               return null;
-            });
-         
-            $("#lights_on_dim").click(function(){            
-               post_house_function("dim");      
-               return null;
-            });
-            
-            $("#lights_on_gaming").click(function(){            
-               post_house_function("gaming");      
-               return null;
-            });
-            
-            $("#lights_on_tv").click(function(){            
-               post_house_function("tv");      
-               return null;
-            });
-         
-            $("#lights_on_concentrate").click(function(){            
-               post_house_function("concentrate");      
-               return null;
-            });
-                              
-            $("#goodmorning").click(function(){post_house_function("goodmorning"); return null;});
-            $("#goodnight").click(function(){  post_house_function("goodnight"); return null;});
-            $("#im_leaving").click(function(){  post_house_function("im_leaving"); return null;});
-            $("#im_home").click(function(){     post_house_function("im_home"); return null;});
-            $("#im_traveling").click(function(){post_house_function("im_traveling"); return null;});                        
-            
-         });
+         //
+         // $( document ).ready(function(){
+         //    loadThermostatStatus();
+         //    loadWeatherStatus();
+         //
+         //    $("#lights_on").click(function(){
+         //       post_house_function("bright");
+         //       return null;
+         //    });
+         //
+         //    $("#lights_off").click(function(){
+         //       post_house_function("off");
+         //       return null;
+         //    });
+         //
+         //    $("#lights_on_read").click(function(){
+         //       post_house_function("read");
+         //       return null;
+         //    });
+         //
+         //    $("#lights_on_dim").click(function(){
+         //       post_house_function("dim");
+         //       return null;
+         //    });
+         //
+         //    $("#lights_on_gaming").click(function(){
+         //       post_house_function("gaming");
+         //       return null;
+         //    });
+         //
+         //    $("#lights_on_tv").click(function(){
+         //       post_house_function("tv");
+         //       return null;
+         //    });
+         //
+         //    $("#lights_on_concentrate").click(function(){
+         //       post_house_function("concentrate");
+         //       return null;
+         //    });
+         //
+         //    $("#goodmorning").click(function(){post_house_function("goodmorning"); return null;});
+         //    $("#goodnight").click(function(){  post_house_function("goodnight"); return null;});
+         //    $("#im_leaving").click(function(){  post_house_function("im_leaving"); return null;});
+         //    $("#im_home").click(function(){     post_house_function("im_home"); return null;});
+         //    $("#im_traveling").click(function(){post_house_function("im_traveling"); return null;});
+         //
+         // });
       </script>
       
 

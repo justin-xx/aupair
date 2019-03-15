@@ -14,6 +14,12 @@ class HueBridge
     @motion_sensors = @client.motion_sensors    
   end
   
+  def to_json
+    {
+      
+    }
+  end
+  
   def indoor_rooms
     @indoors ||= @rooms.reject {|room| room.name == "Outside"}
   end
