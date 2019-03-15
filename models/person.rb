@@ -75,30 +75,33 @@ class Person
   
   def arrived_home
     HueBridge.instance.set_lights_to_recipe(:bright)
+    
     # HueBridge.instance.set_outdoor_lights_to_recipe(:bright)
     # Add resque worker queue job to turn outside lights off in 15 minutes
     
     Thermostat.instance.away=false
-    
-    # Add resque worker queue job to turn televisions on
+    Television.instance.on
   end
   
   def left_home    
     HueBridge.instance.set_lights_to_off
+    HueBridge.instance.set_outdoor_lights_to_off    
     Thermostat.instance.away=true
-    # Add resque worker queue job to turn televisions off    
+    Television.instance.off
   end
   
   def set_awake
-    HueBridge.instance.set_lights_to_recipe(:bright)
-    # Add resque worker queue job to turn televisions on
+    HueBridge.instance.set_lights_to_recipe(:read)
+    Television.instance.on
     # Add resque worker queue job to thermostat to waking temp
   end
   
   def set_asleep
+    HueBridge.instance.set_outdoor_lights_to_off    
     HueBridge.instance.set_lights_to_off
+    Television.instance.on
+    
     # Add resque worker queue job to thermostat to sleeping temp (-5 degrees?)        
-    # Add resque worker queue job to turn televisions off    
     # Add resque worker queue job to close garage doors    
   end
   
