@@ -6,7 +6,7 @@ class Location
   field :away, type: Boolean
   field :distance_from_home, type: BigDecimal
   
-  field :timezone,         type: String,   default: "America/New York"
+  field :timezone,         type: String,   default: Person.instance.timezone_name
   field :timestamp,        type: DateTime, default: Time.now.utc.to_i
   field :client_timestamp, type: DateTime
 

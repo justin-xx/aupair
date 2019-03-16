@@ -58,6 +58,14 @@ class Person
     @awake ? set_awake : set_asleep
   end
   
+  def timezone_name
+    "America/New York"
+  end
+  
+  def timezone
+    TZInfo::Timezone.get(timezone_name)
+  end
+  
   def to_json
     {
       location: [last_location.lat, last_location.lng],
