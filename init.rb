@@ -12,9 +12,9 @@ AUPAIR_CONFIG = JSON.parse(
   )
 )
 
-DATABASE = Mongo::Client.new(
-  [AUPAIR_CONFIG["mongodb"]["ip"] + ":" + AUPAIR_CONFIG["mongodb"]["port"]],
-  :database => AUPAIR_CONFIG["mongodb"]["database"]
-).database
-
-Mongoid.load!("config/mongoid.yml", :development)
+Mongoid.load_configuration(clients: {
+  default: {
+    database: AUPAIR_CONFIG["mongodb"]["database"],
+    hosts: [AUPAIR_CONFIG["mongodb"]["ip"] + ":" + AUPAIR_CONFIG["mongodb"]["port"] ]
+  }
+})
