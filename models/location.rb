@@ -1,3 +1,5 @@
+require 'person'
+
 class Location
   include Mongoid::Document
   
@@ -7,13 +9,14 @@ class Location
   field :distance_from_home, type: BigDecimal
   
   field :timezone,         type: String,   default: Person.instance.timezone_name
-  field :timestamp,        type: DateTime, default: Time.now.utc.to_i
+  field :timestamp,        type: Integer,  default: Time.now.utc.to_i
   field :client_timestamp, type: DateTime
 
   belongs_to :person
 
   after_build   :calc_distance_from_home
   after_build   :calc_away
+  after_build   :update_timestamp
 
   def self.geofence_threshold_distance
     @threshold ||= AUPAIR_CONFIG ? AUPAIR_CONFIG["geofence"]["threshold"] : 1.0 # in miles
@@ -51,6 +54,10 @@ class Location
   
   def calc_away
     self.away = outside_geofence
+  end
+  
+  def update_timestamp
+    self.timestamp = Time.now.utc.to_i
   end
 
 end

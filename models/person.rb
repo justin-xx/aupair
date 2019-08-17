@@ -38,19 +38,17 @@ class Person
     locations.last
   end
   
-  def locations_for_day(time = Time.now)    
-    locations.find({
-      "time" => {
-        "$gte" => timezone.local_to_utc(time.beginning_of_day).to_i, 
-        "$lte" => timezone.local_to_utc(time.end_of_day).to_i
-      }
-    })    
-  end
-
   def away
     last_location.away
   end
   
+  def locations_for_day(time = Time.now)    
+    daystart = timezone.local_to_utc(time.beginning_of_day).to_i
+    dayend = timezone.local_to_utc(time.end_of_day).to_i
+
+    locations.between(timestamp: daystart..dayend)
+  end
+
   def awake=(_status)
     return if @awake == _status
     
@@ -58,12 +56,8 @@ class Person
     @awake ? set_awake : set_asleep
   end
   
-  def timezone_name
-    "America/New York"
-  end
-  
   def timezone
-    TZInfo::Timezone.get(timezone_name)
+    TZInfo::Timezone.get("America/New York")
   end
   
   def to_json
