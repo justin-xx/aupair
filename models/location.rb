@@ -1,5 +1,3 @@
-require 'person'
-
 class Location
   include Mongoid::Document
   
@@ -8,7 +6,7 @@ class Location
   field :away, type: Boolean
   field :distance_from_home, type: BigDecimal
   
-  field :timezone,         type: String,   default: Person.instance.timezone_name
+  field :timezone,         type: String,   default: "America/New York"
   field :timestamp,        type: Integer,  default: Time.now.utc.to_i
   field :client_timestamp, type: DateTime
 
@@ -37,7 +35,7 @@ class Location
   end
   
   def outside_geofence
-    @outside_geofence ||= distance_from_home >= Location.geofence_threshold_distance
+    @outside_geofence ||= self.distance_away >= Location.geofence_threshold_distance
   end
   
   protected
@@ -46,6 +44,10 @@ class Location
     @false_positives ||= AUPAIR_CONFIG["ignore"].inject([]) do |memo, ignore_location|
       memo << Geokit::LatLng.new(ignore_location["lat"], ignore_location["lng"])
     end
+  end
+  
+  def distance_away
+    distance_from_home || calc_distance_from_home
   end
   
   def calc_distance_from_home

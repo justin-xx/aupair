@@ -57,7 +57,7 @@ class Person
   end
   
   def timezone
-    TZInfo::Timezone.get("America/New York")
+    TZInfo::Timezone.get("America/New_York")
   end
   
   def to_json
