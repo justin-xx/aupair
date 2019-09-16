@@ -25,7 +25,7 @@ class Person
 
     return if _location.false_positive
 
-    if _location.outside_geofence && !_at_home
+    if _location.outside_geofence && _at_home
       left_home if !_prev_away
     else
       arrived_home if _prev_away
