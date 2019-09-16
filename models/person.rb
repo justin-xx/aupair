@@ -26,7 +26,7 @@ class Person
     return if _location.false_positive
 
     if !_prev_away && _location.outside_geofence && _at_home
-      puts "false postivie ````` #{_lat},#{{_lng}}"
+      puts "false postivie ````` #{_lat},#{_lng}"
     elsif _location.outside_geofence
       left_home if !_prev_away
     else
