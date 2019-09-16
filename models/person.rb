@@ -18,19 +18,19 @@ class Person
     @location ||= Geokit::LatLng.new(39.606971391513575,-84.2195247487018)
   end
 
-  def update_location(_lat,_lng)
+  def update_location(_lat,_lng,_at_home)
     _prev_away = away
-    
+
     _location = locations.build(lat: _lat, lng: _lng)
-    
+
     return if _location.false_positive
-    
-    if _location.outside_geofence
+
+    if _location.outside_geofence && !_at_home
       left_home if !_prev_away
     else
       arrived_home if _prev_away
-    end 
-    
+    end
+
     _location.save
   end
   
