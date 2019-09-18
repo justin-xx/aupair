@@ -18,20 +18,37 @@ class Person
     @location ||= Geokit::LatLng.new(39.606971391513575,-84.2195247487018)
   end
 
-  def update_location(_lat,_lng,_at_home)
+  ## _on_home_wifi is BOOL for whether or not I'm on lambda SSID
+  def update_location(_lat,_lng,_on_home_wifi)
     _prev_away = away
 
     _location = locations.build(lat: _lat, lng: _lng)
 
-    return if _location.false_positive
-
-    if !_prev_away && _location.outside_geofence && _at_home
+    if _location.outside_geofence && _on_home_wifi
       puts "false postivie ````` #{_lat},#{_lng}"
-    elsif _location.outside_geofence
-      left_home if !_prev_away
-    else
-      arrived_home if _prev_away
     end
+
+    if _prev_away
+      
+      if !_location.outside_geofence || _on_home_wifi
+        puts "just-arrived: #{_lat}, #{_lng} -- wifi: #{_on_home_wifi}"
+        arrived_home
+      else
+        puts "@away:\t#{_lat},\t\t#{_lng}\t\twifi:\t#{_on_home_wifi}"
+      end
+      
+    else
+          
+      if _location.outside_geofence && !_on_home_wifi
+        puts "just-left: #{_lat}, #{_lng} -- wifi: #{_on_home_wifi}"
+        left_home
+      else
+        puts "@home: #{_lat}, #{_lng} -- wifi: #{_on_home_wifi}"
+      end
+      
+    end
+
+
 
     _location.save
   end
