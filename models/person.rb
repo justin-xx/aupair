@@ -25,28 +25,28 @@ class Person
     _location = locations.build(lat: _lat, lng: _lng)
 
     if _location.outside_geofence && _on_home_wifi
-      puts "false postivie ````` #{_lat},#{_lng}"
+      puts "#{Time.now.to_i} -- false positive -- #{_lat},#{_lng}"
     end
 
     if _prev_away
       
       if !_location.outside_geofence || _on_home_wifi
-        puts "just-arrived: #{_lat}, #{_lng} -- wifi: #{_on_home_wifi}"
+        puts "#{Time.now.to_i} -- just-arrived: #{_lat}, #{_lng} -- wifi: #{_on_home_wifi}"
         arrived_home
         _location.away = false
       else
-        puts "@away:\t#{_lat},\t\t#{_lng}\t\twifi:\t#{_on_home_wifi}"
+        puts "#{Time.now.to_i} -- @away:\t#{_lat},\t\t#{_lng}\t\twifi:\t#{_on_home_wifi}"
         _location.away = true
       end
       
     else
           
       if _location.outside_geofence && !_on_home_wifi
-        puts "just-left: #{_lat}, #{_lng} -- wifi: #{_on_home_wifi}"
+        puts "#{Time.now.to_i} -- just-left: #{_lat}, #{_lng} -- wifi: #{_on_home_wifi}"
         _location.away = true        
         left_home
       else
-        puts "@home: #{_lat}, #{_lng} -- wifi: #{_on_home_wifi}"
+        puts "#{Time.now.to_i} -- @home: #{_lat}, #{_lng} -- wifi: #{_on_home_wifi}"
         _location.away = false        
       end
       
