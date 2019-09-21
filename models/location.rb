@@ -13,7 +13,6 @@ class Location
   belongs_to :person
 
   after_build   :calc_distance_from_home
-  after_build   :calc_away
   after_build   :update_timestamp
 
   def self.geofence_threshold_distance
@@ -52,10 +51,6 @@ class Location
   
   def calc_distance_from_home
     self.distance_from_home = lat_lng.distance_to(person.house_location)
-  end
-  
-  def calc_away
-    self.away = outside_geofence
   end
   
   def update_timestamp

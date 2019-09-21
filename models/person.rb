@@ -33,22 +33,24 @@ class Person
       if !_location.outside_geofence || _on_home_wifi
         puts "just-arrived: #{_lat}, #{_lng} -- wifi: #{_on_home_wifi}"
         arrived_home
+        _location.away = false
       else
         puts "@away:\t#{_lat},\t\t#{_lng}\t\twifi:\t#{_on_home_wifi}"
+        _location.away = true
       end
       
     else
           
       if _location.outside_geofence && !_on_home_wifi
         puts "just-left: #{_lat}, #{_lng} -- wifi: #{_on_home_wifi}"
+        _location.away = true        
         left_home
       else
         puts "@home: #{_lat}, #{_lng} -- wifi: #{_on_home_wifi}"
+        _location.away = false        
       end
       
     end
-
-
 
     _location.save
   end
