@@ -11,13 +11,13 @@ class LocationController < Aupair::Base
   
   post '/' do
     @person = Person.instance
-    parameters =  eval("#{params.first.first}")
     
     @person.update_location(
-      parameters[:lat], 
-      parameters[:lng], 
-      parameters[:atHome]
+      params[:lat], 
+      params[:lng], 
+      params[:atHome]
     )    
+    
     @person.to_json
   end
   
