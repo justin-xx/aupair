@@ -18,36 +18,36 @@ class Person
     @location ||= Geokit::LatLng.new(39.606971391513575,-84.2195247487018)
   end
 
-  ## _on_home_wifi is BOOL for whether or not I'm on lambda SSID
-  def update_location(_lat,_lng,_on_home_wifi)
+  ## _on_wifi is BOOL for whether or not I'm on lambda SSID
+  def update_location(_lat,_lng,_on_wifi)
     _prev_away = away
 
     _location = locations.build(lat: _lat, lng: _lng)
 
-    if _location.outside_geofence && _on_home_wifi
+    if _location.outside_geofence && _on_wifi
       puts "#{Time.now.to_i} -- false positive -- #{_lat},#{_lng}"
     end
 
     if _prev_away
       
-      if !_location.outside_geofence || _on_home_wifi
-        puts "#{Time.now.to_i} -- just-arrived: #{_lat}, #{_lng} -- wifi: #{_on_home_wifi}"
+      if !_location.outside_geofence || _on_wifi
+        puts "#{Time.now.to_i} -- just-arrived: #{_lat}, #{_lng} -- wifi: #{_on_wifi}"
         arrived_home
         _location.away = false
       else
-        puts "#{Time.now.to_i} -- @away:\t#{_lat},\t\t#{_lng}\t\twifi:\t#{_on_home_wifi}"
+        puts "#{Time.now.to_i} -- @away:\t#{_lat},\t\t#{_lng}\t\twifi:\t#{_on_wifi}"
         _location.away = true
       end
       
     else
           
-      if _location.outside_geofence && !_on_home_wifi
-        puts "#{Time.now.to_i} -- just-left: #{_lat}, #{_lng} -- wifi: #{_on_home_wifi}"
-        _location.away = true        
+      if _location.outside_geofence && !_on_wifi
+        puts "#{Time.now.to_i} -- just-left: #{_lat}, #{_lng} -- wifi: #{_on_wifi}"
+        _location.away = true       
         left_home
       else
-        puts "#{Time.now.to_i} -- @home: #{_lat}, #{_lng} -- wifi: #{_on_home_wifi}"
-        _location.away = false        
+        puts "#{Time.now.to_i} -- @home: #{_lat}, #{_lng} -- wifi: #{_on_wifi}"
+        _location.away = false
       end
       
     end

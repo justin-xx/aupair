@@ -15,7 +15,7 @@ class LocationController < Aupair::Base
     @person.update_location(
       params[:lat], 
       params[:lng], 
-      params[:atHome]
+      params[:wifi]
     )    
     
     @person.to_json
